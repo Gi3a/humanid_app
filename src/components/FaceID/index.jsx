@@ -111,32 +111,17 @@ const FaceID = () => {
         }
     };
 
-    const dataURItoBlob = (dataURI) => {
-        // Преобразование base64-строки в объект типа Blob
-        const byteString = atob(dataURI.split(',')[1]);
-        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        const blob = new Blob([ab], { type: mimeString });
-        console.log(blob);
-        return blob;
-    };
-
     const handleSend = async (face) => {
         if (face) {
-            // const formData = new FormData();
-            // formData.append('image', dataURItoBlob(face));
             const form = {
-                // "image": dataURItoBlob(face),
-                "image": dataURItoBlob(face),
+                image: "" + face + "",
             }
             try {
                 const response =
-                    await axios.post('http://127.0.0.1:8000/api/recognize_face', JSON.stringify(form));
-                console.log("Response.data - ", response.data);
+                    await axios.post(
+                        'http://127.0.0.1:8000/api/recognize_face',
+                        form,
+                    );
                 // setShowMessage(data);
             } catch (error) {
                 console.error(error);
@@ -156,7 +141,6 @@ const FaceID = () => {
         setShowMessage('');
         capture();
         setShowMessage('Emotion test passed succesfully! Data is sending...')
-        // здесь можно вызвать любую функцию, которую необходимо выполнить при обнаружении лица с точностью больше 0.85
     };
 
 
