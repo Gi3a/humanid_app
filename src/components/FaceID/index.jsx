@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as faceapi from 'face-api.js';
 import Webcam from "react-webcam";
 import axios from 'axios';
@@ -12,10 +12,6 @@ const FaceID = () => {
     const canvasRef = useRef(null);
 
     const [start, setStart] = useState(false);
-    const [face, setFace] = React.useState(null);
-    const [hasSmiled, setHasSmiled] = useState(false);
-    const [hasSad, setHasSad] = useState(false);
-    const [hasDetection, setHasDetection] = useState(0);
     const [showMessage, setShowMessage] = useState('');
     const [isModelLoaded, setIsModelLoaded] = useState(false);
     const [isMultipleFacesDetected, setIsMultipleFacesDetected] = useState(false);
@@ -41,107 +37,123 @@ const FaceID = () => {
         loadModels();
     }, []);
 
+
     const handleVideoLoad = async () => {
-        if (!face) {
-            faceapi.matchDimensions(canvasRef.current, videoConstraints);
-            setInterval(async () => {
-                const detections = await faceapi.detectAllFaces(
-                    webcamRef.current.video,
-                    new faceapi.TinyFaceDetectorOptions()
-                ).withFaceLandmarks().withFaceDescriptors().withAgeAndGender().withFaceExpressions();
-                const resizedDetections = faceapi.resizeResults(detections, videoConstraints);
-                canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-                // Drawing lines and expression and data
-                faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
-                faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
-                faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
-                resizedDetections.forEach((detection) => {
-                    const expressions = detection.expressions;
-                    const detection_score = detection.alignedRect._score;
-                    const { age, gender, genderProbability } = detection;
-                    // const bestMatch = faceapi.euclideanDistance(
-                    //     detection.descriptor,
-                    //     new Float32Array(128)
-                    // ) < 0.6
-                    //     ? 'Match'
-                    //     : 'No Match';
 
-                    // More than 1 face
-                    if (resizedDetections.length > 1) {
-                        setIsMultipleFacesDetected(true);
-                        setShowMessage('Multiple faces detected');
-                    } else {
-                        setIsMultipleFacesDetected(false);
-                        setShowMessage('');
-                    }
+        var intervalID = 0;
+        faceapi.matchDimensions(canvasRef.current, videoConstraints);
 
-                    // Best detection score > 0.85
-                    // if (bestMatch === 'Match' && detection.score > 0.7) {
-                    // Validation for expression
-                    if (detection_score > 0.7) {
-                        setShowMessage('Smile please')
-                        if (expressions.happy > 0.7) {
-                            // setHasSmiled(true);
-                            handleDetection();
-                            // console.log(`1. Happy! status - ${hasSmiled}`)
-                        }
-                        // else if (hasSmiled) {
-                        //     if (expressions.sad > 0.7) {
-                        //         console.log("2. Sad!")
-                        //         setHasSad(true);
-                        //     }
-                        // }
-                    }
-                    // Draw age and gender
-                    // new faceapi.draw.DrawTextField(
-                    //     [
-                    //         `${Math.round(age)} years`,
-                    //         `${gender} (${Math.round(genderProbability * 100)}%)`,
-                    //         `${bestMatch}`
-                    //     ],
-                    //     detection.detection.box.bottomLeft
-                    // ).draw(canvasRef.current);
+        intervalID = setInterval(async () => {
+            const detections = await faceapi.detectAllFaces(
+                webcamRef.current.video,
+                new faceapi.TinyFaceDetectorOptions()
+            )
+                .withFaceLandmarks()
+                .withFaceDescriptors()
+                .withAgeAndGender()
+                .withFaceExpressions();
 
-                });
-                // if (hasDetection && hasSmiled && hasSad) {
-                if (hasDetection && hasSmiled) {
-                    handleDetection();
+            // Canvas reflection
+            const resizedDetections = faceapi.resizeResults(detections, videoConstraints);
+            canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+
+            // Drawing lines and expression and data
+            faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
+            faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
+            faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
+
+            // For each frame
+            resizedDetections.forEach((detection) => {
+
+                const { age, gender, genderProbability } = detection;
+                const face = verificationFace(detection, resizedDetections);
+
+
+                if (face) {
+                    canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                    clearInterval(intervalID);
+                    handleSend(face);
                 }
-            }, 1000);
-        }
+
+                // Draw age and gender
+                new faceapi.draw.DrawTextField(
+                    [
+                        `${Math.round(age)} years`,
+                        `${gender} (${Math.round(genderProbability * 100)}%)`,
+                    ],
+                    detection.detection.box.bottomRight
+                ).draw(canvasRef.current);
+
+            });
+        }, 500);
     };
+
+    const verificationFace = (detection, resizedDetections) => {
+        const expressions = detection.expressions;
+        const detection_score = detection.alignedRect._score;
+
+        // More than 1 face
+        if (resizedDetections.length > 1) {
+            setIsMultipleFacesDetected(true);
+            setShowMessage('Multiple faces detected');
+        } else {
+            setIsMultipleFacesDetected(false);
+            setShowMessage('');
+        }
+
+        // Validation for expression
+        setShowMessage('Come closer place 🔍');
+        if (detection_score > 0.7) {
+            setShowMessage('Smile please 🙂');
+            if (expressions.happy > 0.7) {
+                setShowMessage('Neutral please 😐');
+                // if (expressions.neutral > 0.7) {
+                return capture();
+                // }
+            }
+        }
+    }
 
     const handleSend = async (face) => {
         if (face) {
+            setShowMessage('Emotion test passed succesfully! Data is sending...');
+
+            // const byteCharacters = atob(face);
+            // const byteNumbers = new Array(byteCharacters.length);
+
+            // for (let i = 0; i < byteCharacters.length; i++) {
+            //     byteNumbers[i] = byteCharacters.charCodeAt(i);
+            // }
+
+            // const byteArray = new Uint8Array(byteNumbers);
+            // const file = new Blob([byteArray], { type: 'image/jpeg' });
+
+            // const form = new FormData();
+            // // form.append('image', file);
             const form = {
-                image: "" + face + "",
-            }
+                image: face,
+            };
+
+            console.log(form)
+
             try {
-                const response =
-                    await axios.post(
-                        'http://127.0.0.1:8000/api/recognize_face',
-                        form,
-                    );
-                // setShowMessage(data);
+                await axios.post('http://127.0.0.1:8000/api/recognize_face', form);
             } catch (error) {
                 console.error(error);
             }
+
         } else {
             console.log('No image to send.');
         }
     };
 
-    const capture = React.useCallback(() => {
+    const capture = useCallback(() => {
         const face = webcamRef.current.getScreenshot();
-        setFace(face);
-        handleSend(face);
-    }, [webcamRef, setFace]);
+        // const screenshot = webcamRef.current.getScreenshot();
+        // const face = screenshot.split(",")[1];
 
-    const handleDetection = () => {
-        setShowMessage('');
-        capture();
-        setShowMessage('Emotion test passed succesfully! Data is sending...')
-    };
+        return face
+    }, [webcamRef]);
 
 
     const handleStart = event => {
@@ -171,11 +183,6 @@ const FaceID = () => {
                     <button onClick={handleStart}>Start</button>
                 </>
             }
-            {face && (
-                <img
-                    src={face}
-                />
-            )}
         </div>
     )
 }
