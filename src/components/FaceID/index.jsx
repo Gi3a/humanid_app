@@ -118,28 +118,18 @@ const FaceID = () => {
         if (face) {
             setShowMessage('Emotion test passed succesfully! Data is sending...');
 
-            // const byteCharacters = atob(face);
-            // const byteNumbers = new Array(byteCharacters.length);
-
-            // for (let i = 0; i < byteCharacters.length; i++) {
-            //     byteNumbers[i] = byteCharacters.charCodeAt(i);
-            // }
-
-            // const byteArray = new Uint8Array(byteNumbers);
-            // const file = new Blob([byteArray], { type: 'image/jpeg' });
-
-            // const form = new FormData();
-            // // form.append('image', file);
             const form = {
                 image: face,
             };
 
-            console.log(form)
+            var response = null;
 
             try {
-                await axios.post('http://127.0.0.1:8000/api/recognize_face', form);
+                response = await axios.post('http://127.0.0.1:8000/api/recognize_face', form);
             } catch (error) {
                 console.error(error);
+            } finally {
+                console.log(response);
             }
 
         } else {
