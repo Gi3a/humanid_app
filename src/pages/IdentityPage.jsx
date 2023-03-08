@@ -1,13 +1,21 @@
 import React from 'react'
 
+import { Typography } from '@mui/material';
+
+import { useTitle } from '../hooks/use-title';
+
 import FaceID from '../components/FaceID'
+import { Page } from '../components/UI/Page';
 
 const IdentyPage = () => {
+
+    useTitle('🌐 Identification');
+
     return (
-        <div className='page'>
-            <h1>HumanID</h1>
+        <Page>
+            <Typography component='h1' variant='5'>🌐 HumanID</Typography>
             <FaceID />
-        </div>
+        </Page>
     )
 }
 

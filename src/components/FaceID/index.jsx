@@ -1,15 +1,24 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
 import * as faceapi from 'face-api.js';
-import Webcam from "react-webcam";
+
+import Webcam from 'react-webcam';
 import axios from 'axios';
 
 import styles from './FaceID.module.scss';
+
+import { Div } from '../UI/Div';
+import { Submit } from '../UI/Submit';
 
 
 const FaceID = () => {
 
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
+
+    const navigate = useNavigate();
 
     const [start, setStart] = useState(false);
     const [showMessage, setShowMessage] = useState('');
@@ -85,7 +94,7 @@ const FaceID = () => {
                 ).draw(canvasRef.current);
 
             });
-        }, 500);
+        }, 100);
     };
 
     const verificationFace = (detection, resizedDetections) => {
@@ -128,8 +137,15 @@ const FaceID = () => {
                 response = await axios.post('http://127.0.0.1:8000/api/recognize_face', form);
             } catch (error) {
                 console.error(error);
+                window.location.reload();
             } finally {
-                console.log(response);
+                if (response.data.result === "no_info")
+                    navigate("/settings");
+                else if (response.data.result === "matched")
+                    navigate("/panel");
+                else
+                    navigate("/panel");
+                console.log(response.data.result);
             }
 
         } else {
@@ -139,41 +155,41 @@ const FaceID = () => {
 
     const capture = useCallback(() => {
         const face = webcamRef.current.getScreenshot();
-        // const screenshot = webcamRef.current.getScreenshot();
-        // const face = screenshot.split(",")[1];
-
         return face
     }, [webcamRef]);
 
 
-    const handleStart = event => {
+    const handleStart = () => {
+        console.log('click')
         setStart(true);
     };
 
     return (
-        <div className={styles.faceid}>
+        <Div >
             {start ?
                 <>
-                    <Webcam
-                        audio={false}
-                        ref={webcamRef}
-                        screenshotFormat="image/jpeg"
-                        videoConstraints={videoConstraints}
-                        onUserMedia={handleVideoLoad}
-                    />
-                    <canvas ref={canvasRef} />
-                    <div className={`${styles.faceid_message} ${showMessage || isMultipleFacesDetected ? styles.message_active : ''}`}>
-                        {showMessage}
+                    <div className={styles.faceid}>
+                        <Webcam
+                            audio={false}
+                            ref={webcamRef}
+                            screenshotFormat="image/jpeg"
+                            videoConstraints={videoConstraints}
+                            onUserMedia={handleVideoLoad}
+                        />
+                        <canvas ref={canvasRef} />
+                        <div className={`${styles.faceid_message} ${showMessage || isMultipleFacesDetected ? styles.message_active : ''}`}>
+                            {showMessage}
+                        </div>
                     </div>
                 </>
                 :
                 <>
                     <h2>Face Identification</h2>
                     <p>Face identification is the process of verifying a person's identity based on the analysis and comparison of images.</p>
-                    <button onClick={handleStart}>Start</button>
+                    <Submit onClick={handleStart}>Start</Submit>
                 </>
             }
-        </div>
+        </Div>
     )
 }
 

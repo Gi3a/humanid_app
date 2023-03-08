@@ -1,13 +1,18 @@
-import React from 'react'
+import React from 'react';
 
-import Menu from '../components/Menu'
+import { Typography } from '@mui/material';
+
+import { useTitle } from '../hooks/use-title';
+import { Page } from '../components/UI/Page';
 
 const PanelPage = () => {
+
+    useTitle('🪟 Panel');
+
     return (
-        <div className='page'>
-            <h1>Panel</h1>
-            <Menu />
-        </div>
+        <Page>
+            <Typography component='h1' variant='5'>🪟 Panel</Typography>
+        </Page>
     )
 }
 

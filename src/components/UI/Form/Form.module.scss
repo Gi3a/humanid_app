@@ -1,0 +1,19 @@
+.form {
+    transition: 0.3s all !important;
+    margin-top: 5%;
+    width: 65%;
+
+    @media (min-width: 150px) and (max-width: 480px) {
+        & {
+            width: 100%;
+        }
+    }
+
+    @media (min-width: 481px) and (max-width: 1024px) {
+        & {
+            width: 80%;
+        }
+    }
+
+
+}
