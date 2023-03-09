@@ -23,7 +23,7 @@ export function useAuth() {
 
 
     return {
-        isAuth: !!id,
+        isAuth: !!token,
         id,
         token,
         passport_address,

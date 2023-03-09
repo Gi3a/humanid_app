@@ -2,7 +2,7 @@ import React from 'react';
 
 import './assets/styles/general.scss';
 
-import { AppRouter } from './components/AppRouter';
+import { AppRouter } from './utils/AppRouter';
 
 function App() {
   return (

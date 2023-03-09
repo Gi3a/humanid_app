@@ -27,7 +27,6 @@ const userSlice = createSlice({
         setUser(state, action) {
             state.id = action.payload.id;
             state.token = action.payload.token;
-            state.passport_address = action.payload.passport_address;
             state.face_encodings = action.payload.face_encodings;
             state.id_number = action.payload.id_number;
             state.email = action.payload.email;
@@ -42,6 +41,11 @@ const userSlice = createSlice({
             state.private_key = action.payload.private_key;
             state.phone = action.payload.phone;
             state.secrets = action.payload.secrets;
+        },
+        setAuth(state, action) {
+            state.id = action.payload.id;
+            state.token = action.payload.token;
+            state.public_key = action.payload.public_key;
         },
         setPersonal(state, action) {
             state.firstname = action.payload.firstname;
@@ -70,7 +74,6 @@ const userSlice = createSlice({
         unsetUser(state) {
             state.id = null;
             state.token = null;
-            state.passport_address = null;
             state.face_encodings = null;
             state.id_number = null;
             state.email = null;
@@ -89,6 +92,6 @@ const userSlice = createSlice({
     },
 });
 
-export const { setUser, setSecret, setPersonal, setPassport, setAdditional, unsetSecret, unsetUser } = userSlice.actions;
+export const { setUser, setSecret, setPersonal, setAuth, setPassport, setAdditional, unsetSecret, unsetUser } = userSlice.actions;
 
 export default userSlice.reducer;

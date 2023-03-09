@@ -1,7 +1,8 @@
-import React from 'react'
+import React from 'react';
 
 import { Typography } from '@mui/material';
 
+import { useAuth } from '../hooks/use-auth';
 import { useTitle } from '../hooks/use-title';
 
 import FaceID from '../components/FaceID'

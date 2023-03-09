@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
+import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 
 import * as faceapi from 'face-api.js';
 
-import Webcam from 'react-webcam';
+import { setAuth } from '../../store/slices/userSlice';
+
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import Webcam from 'react-webcam';
 
 import styles from './FaceID.module.scss';
 
@@ -18,12 +22,14 @@ const FaceID = () => {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [start, setStart] = useState(false);
     const [showMessage, setShowMessage] = useState('');
     const [isModelLoaded, setIsModelLoaded] = useState(false);
     const [isMultipleFacesDetected, setIsMultipleFacesDetected] = useState(false);
+
 
     const videoConstraints = {
         width: 640,
@@ -137,15 +143,24 @@ const FaceID = () => {
                 response = await axios.post('http://127.0.0.1:8000/api/recognize_face', form);
             } catch (error) {
                 console.error(error);
-                window.location.reload();
+                Swal.fire('Error', error.message, 'error');
             } finally {
-                if (response.data.result === "no_info")
-                    navigate("/settings");
-                else if (response.data.result === "matched")
+                if (response.status === 200) {
+                    console.log('Response', response.data)
+                    const jwt_token = response.data.jwt_token;
+                    const person = response.data.person;
+                    dispatch(setAuth({
+                        id: person.id,
+                        public_key: person.public_key,
+                        token: jwt_token,
+                    }));
+                    if (!person.public_key)
+                        navigate("/settings");
                     navigate("/panel");
-                else
-                    navigate("/panel");
-                console.log(response.data.result);
+                } else {
+                    console.log(response);
+                    Swal.fire('Info', 'Please try again later', 'info');
+                }
             }
 
         } else {
@@ -165,8 +180,8 @@ const FaceID = () => {
     };
 
     return (
-        <Div >
-            {start ?
+        <Div>
+            {(start && isModelLoaded) ?
                 <>
                     <div className={styles.faceid}>
                         <Webcam
