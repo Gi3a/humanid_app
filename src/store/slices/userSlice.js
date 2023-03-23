@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     id: null,
     token: null,
-    passport_address: null,
     face_encodings: null,
     id_number: null,
     email: null,
@@ -16,8 +15,7 @@ const initialState = {
     public_key: null,
     private_key: null,
     phone: null,
-    password: null,
-    secrets: []
+    pin: null,
 };
 
 const userSlice = createSlice({
@@ -30,7 +28,7 @@ const userSlice = createSlice({
             state.face_encodings = action.payload.face_encodings;
             state.id_number = action.payload.id_number;
             state.email = action.payload.email;
-            state.password = action.payload.password;
+            state.pin = action.payload.pin;
             state.firstname = action.payload.firstname;
             state.lastname = action.payload.lastname;
             state.nationality = action.payload.nationality;
@@ -40,12 +38,14 @@ const userSlice = createSlice({
             state.public_key = action.payload.public_key;
             state.private_key = action.payload.private_key;
             state.phone = action.payload.phone;
-            state.secrets = action.payload.secrets;
         },
         setAuth(state, action) {
             state.id = action.payload.id;
             state.token = action.payload.token;
             state.public_key = action.payload.public_key;
+        },
+        setFace(state, action) {
+            state.face_encodings = action.payload.face_encodings;
         },
         setPersonal(state, action) {
             state.firstname = action.payload.firstname;
@@ -61,15 +61,15 @@ const userSlice = createSlice({
         setAdditional(state, action) {
             state.email = action.payload.email;
             state.phone = action.payload.phone;
+            state.pin = action.payload.pin;
         },
         setSecret(state, action) {
-            state.password = action.payload.password;
-            state.secrets = action.payload.secrets;
+            state.pin = action.payload.pin;
+            state.private_key = action.payload.private_key;
         },
         unsetSecret(state) {
-            state.password = null;
+            state.pin = null;
             state.private_key = null;
-            state.secrets = null;
         },
         unsetUser(state) {
             state.id = null;
@@ -77,7 +77,7 @@ const userSlice = createSlice({
             state.face_encodings = null;
             state.id_number = null;
             state.email = null;
-            state.password = null;
+            state.pin = null;
             state.firstname = null;
             state.lastname = null;
             state.nationality = null;
@@ -87,11 +87,10 @@ const userSlice = createSlice({
             state.public_key = null;
             state.private_key = null;
             state.phone = null;
-            state.secrets = null;
         },
     },
 });
 
-export const { setUser, setSecret, setPersonal, setAuth, setPassport, setAdditional, unsetSecret, unsetUser } = userSlice.actions;
+export const { setUser, setSecret, setPersonal, setAuth, setFace, setPassport, setAdditional, unsetSecret, unsetUser } = userSlice.actions;
 
 export default userSlice.reducer;

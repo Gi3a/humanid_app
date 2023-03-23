@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from 'react';
 
 import { Typography, Stepper, Step, StepLabel, StepConnector } from '@mui/material';
 
+import { useAuth } from '../hooks/use-auth';
 import { useTitle } from '../hooks/use-title';
 import { Page } from '../components/UI/Page';
+
+import { useNavigate } from 'react-router-dom';
 
 import { PersonalForm } from '../components/FormsID/PersonalForm';
 import { PassportForm } from '../components/FormsID/PassportForm';
 import { AdditionalForm } from '../components/FormsID/AdditionalForm';
-import { SecretForm } from '../components/FormsID/SecretForm';
 import { PreviewForm } from '../components/FormsID/PreviewForm';
 
 
-const steps = ['Personal Data', 'Passport Data', 'Additional Data', 'Secret Data', 'Preview Data'];
+const steps = ['Personal Data', 'Passport Data', 'Additional Data', 'Preview Data'];
 
 const NonLinearStepper = (props) => {
     const { activeStep, handleStep, isFormError } = props;
@@ -37,6 +37,19 @@ const SettingsPage = () => {
 
     const [activeStep, setActiveStep] = useState(0);
     const [isFormError, setIsFormError] = useState(false);
+
+    const { token, face_encodings } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (token)
+            navigate('/panel');
+        if (face_encodings && !token)
+            navigate('/settings');
+        else
+            navigate('/');
+
+    }, [token, face_encodings, navigate]);
 
     const handleStep = (step) => () => {
         setActiveStep(step);
@@ -65,9 +78,8 @@ const SettingsPage = () => {
             {activeStep === 0 && <PersonalForm handleNext={handleStep(1)} />}
             {activeStep === 1 && <PassportForm handleNext={handleStep(2)} handleBack={handleStep(0)} />}
             {activeStep === 2 && <AdditionalForm handleNext={handleStep(3)} handleBack={handleStep(1)} />}
-            {activeStep === 3 && <SecretForm handleNext={handleStep(4)} handleBack={handleStep(2)} />}
-            {activeStep === 4 && <PreviewForm handleNext={handleStep(5)} handleBack={handleStep(3)} />}
-            {activeStep === 5 && (
+            {activeStep === 3 && <PreviewForm handleNext={handleStep(4)} handleBack={handleStep(2)} />}
+            {activeStep === 4 && (
                 <div>
                     <Typography variant='subtitle1' gutterBottom>Error: Please complete all required fields before submitting</Typography>
                     <button onClick={handleBack}>Back</button>

@@ -4,11 +4,9 @@ export function useAuth() {
     const {
         id,
         token,
-        passport_address,
         face_encodings,
         id_number,
         email,
-        password,
         firstname,
         lastname,
         nationality,
@@ -18,7 +16,7 @@ export function useAuth() {
         public_key,
         private_key,
         phone,
-        secrets
+        pin
     } = useSelector(state => state.user);
 
 
@@ -26,11 +24,9 @@ export function useAuth() {
         isAuth: !!token,
         id,
         token,
-        passport_address,
         face_encodings,
         id_number,
         email,
-        password,
         firstname,
         lastname,
         nationality,
@@ -40,6 +36,6 @@ export function useAuth() {
         public_key,
         private_key,
         phone,
-        secrets
+        pin
     }
 }

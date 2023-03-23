@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 import { useDispatch } from "react-redux";
-import { useNavigate } from 'react-router-dom';
 
 import * as faceapi from 'face-api.js';
 
-import { setAuth } from '../../store/slices/userSlice';
+import { setFace, setAuth } from '../../store/slices/userSlice';
 
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -19,14 +18,13 @@ import { Submit } from '../UI/Submit';
 
 const FaceID = () => {
 
+    const dispatch = useDispatch();
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-
     const [start, setStart] = useState(false);
-    const [showMessage, setShowMessage] = useState('');
+    const [isSent, setIsSent] = useState(false);
+    const [showMessage, setShowMessage] = useState('Get closer to the camera');
     const [isModelLoaded, setIsModelLoaded] = useState(false);
     const [isMultipleFacesDetected, setIsMultipleFacesDetected] = useState(false);
 
@@ -78,28 +76,30 @@ const FaceID = () => {
             faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
 
             // For each frame
-            resizedDetections.forEach((detection) => {
+            if (!isSent) {
+                resizedDetections.forEach((detection) => {
 
-                const { age, gender, genderProbability } = detection;
-                const face = verificationFace(detection, resizedDetections);
+                    const { age, gender, genderProbability } = detection;
+                    const face = verificationFace(detection, resizedDetections);
 
 
-                if (face) {
-                    canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-                    clearInterval(intervalID);
-                    handleSend(face);
-                }
+                    if (face) {
+                        canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                        clearInterval(intervalID);
+                        handleSend(face);
+                    }
 
-                // Draw age and gender
-                new faceapi.draw.DrawTextField(
-                    [
-                        `${Math.round(age)} years`,
-                        `${gender} (${Math.round(genderProbability * 100)}%)`,
-                    ],
-                    detection.detection.box.bottomRight
-                ).draw(canvasRef.current);
+                    // Draw age and gender
+                    new faceapi.draw.DrawTextField(
+                        [
+                            `${Math.round(age)} years`,
+                            `${gender} (${Math.round(genderProbability * 100)}%)`,
+                        ],
+                        detection.detection.box.bottomRight
+                    ).draw(canvasRef.current);
 
-            });
+                });
+            }
         }, 100);
     };
 
@@ -134,35 +134,41 @@ const FaceID = () => {
             setShowMessage('Emotion test passed succesfully! Data is sending...');
 
             const form = {
-                image: face,
+                face_image: face,
             };
 
             var response = null;
 
             try {
-                response = await axios.post('http://127.0.0.1:8000/api/recognize_face', form);
+                response = await axios.post('http://127.0.0.1:8000/identification', form);
             } catch (error) {
                 console.error(error);
                 Swal.fire('Error', error.message, 'error');
             } finally {
                 if (response.status === 200) {
-                    console.log('Response', response.data)
-                    const jwt_token = response.data.jwt_token;
-                    const person = response.data.person;
-                    dispatch(setAuth({
-                        id: person.id,
-                        public_key: person.public_key,
-                        token: jwt_token,
-                    }));
-                    if (!person.public_key)
-                        navigate("/settings");
-                    navigate("/panel");
+                    setIsSent(true);
+                    // Person isn't Identified
+                    if (response.data.face_encodings) {
+                        console.log('isnt identified')
+                        dispatch(setFace({
+                            face_encodings: response.data.face_encodings,
+                        }));
+                    }
+                    // Person is Identified
+                    else if (response.data.access_token) {
+                        console.log('identified')
+                        const jwt_token = response.data.jwt_token;
+                        const person = response.data.person;
+                        dispatch(setAuth({
+                            id: person.id,
+                            public_key: person.public_key,
+                            token: jwt_token,
+                        }));
+                    }
                 } else {
                     console.log(response);
-                    Swal.fire('Info', 'Please try again later', 'info');
                 }
             }
-
         } else {
             console.log('No image to send.');
         }

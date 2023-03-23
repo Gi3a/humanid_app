@@ -14,19 +14,6 @@ import { Input } from '../UI/Input';
 import { Submit } from '../UI/Submit';
 import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
-const schema = yup.object().shape({
-    email: yup
-        .string()
-        .email('Email should have correct format')
-        .required('Email is a required field')
-        .lowercase(),
-    phone: yup
-        .string()
-        // .matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, 'Phone number is not valid')
-        .required('Phone number is a required field')
-        .lowercase(),
-});
-
 const normalizePhoneNumber = (value) => {
     const phone = parsePhoneNumberFromString(value)
     if (!phone) {
@@ -37,15 +24,38 @@ const normalizePhoneNumber = (value) => {
 
 export const AdditionalForm = ({ handleNext, handleBack }) => {
 
-    const { email, phone, password } = useAuth();
+    const { email, phone, pin, face_encodings } = useAuth();
 
     const dispatch = useDispatch();
+
+    const schema = yup.object().shape({
+        email: yup
+            .string()
+            .email('Email should have correct format')
+            .required('Email is a required field')
+            .lowercase(),
+        phone: yup
+            .string()
+            // .matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, 'Phone number is not valid')
+            .required('Phone number is a required field')
+            .lowercase(),
+        pin: yup
+            .number()
+            .typeError('PIN must be a number')
+            .test('min length', 'PIN must be at least 3 numbers long', (value) => {
+                return value.toString().length >= 3;
+            })
+            .test('max value', `PIN code must not exceed this maximum - ${face_encodings.length}`, (value) => {
+                return value <= parseInt(face_encodings.length);
+            })
+            .required('PIN is a required field'),
+    });
 
     const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             email: email,
             phone: phone,
-            password: password
+            pin: pin
         },
         mode: 'onBlur',
         resolver: yupResolver(schema)
@@ -56,6 +66,7 @@ export const AdditionalForm = ({ handleNext, handleBack }) => {
         dispatch(setAdditional({
             email: data.email,
             phone: data.phone,
+            pin: data.pin,
         }));
         handleNext();
     }
@@ -84,6 +95,15 @@ export const AdditionalForm = ({ handleNext, handleBack }) => {
                 }}
                 error={!!errors.phone}
                 helperText={errors?.phone?.message}
+            />
+            <Input
+                {...register('pin', { required: true })}
+                id='pin'
+                type='number'
+                label='PIN'
+                name='pin'
+                error={!!errors.pin}
+                helperText={errors?.pin?.message}
             />
             <ButtonGroup>
                 <Submit onClick={handleBack}>⬅️ Back</Submit>
