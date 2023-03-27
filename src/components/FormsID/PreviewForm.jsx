@@ -12,7 +12,15 @@ import { Popup } from '../UI/Popup';
 import { Submit } from '../UI/Submit';
 import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
-import { generateKeyPair, restoreKeyPair, encrypt, decrypt } from '../../utils/crypto';
+import {
+    generateSaltedFaceEncodings,
+    extractSalt,
+    generateKeyPair,
+    recoverFaceEncodings,
+    encryptData,
+    decryptData,
+    recoverSaltedFaceEncodings
+} from '../../utils/crypto';
 
 export const PreviewForm = ({ handleNext, handleBack }) => {
 
@@ -52,18 +60,36 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
     const handleConfirm = async () => {
 
 
-        const { publicKey, privateKey, saltedFaceEncodings } = generateKeyPair(face_encodings, pin);
-        console.log('Generated key pair:', { publicKey, privateKey });
 
-        const restoredKeyPair = restoreKeyPair(saltedFaceEncodings, pin);
-        console.log('Restored key pair:', restoredKeyPair);
+        // Генерация saltedFaceEncodings
+        const { saltedFaceEncodings } = generateSaltedFaceEncodings(face_encodings, pin);
+        console.log(face_encodings)
 
-        const text = 'Hello, world!';
-        const encryptedData = encrypt(text, publicKey, privateKey);
-        console.log('Encrypted data:', encryptedData);
+        // Одиночная генерация
+        const { privateKeyArmored, publicKeyArmored } = await generateKeyPair(saltedFaceEncodings, firstname + ' ' + lastname, email);
 
-        const decryptedText = decrypt(encryptedData, restoredKeyPair.publicKey, restoredKeyPair.privateKey);
-        console.log('Decrypted text:', decryptedText);
+
+        // Оригинальные данные для шифрования
+        const originalData = "Hello, worlsssd!";
+
+        // Одиночное шифрование
+        const encryptedData = await encryptData(originalData, publicKeyArmored);
+
+        // Массовое шифрование
+        // const encryptedData = await encryptData(originalData, [publicKey1, publicKey2]);
+
+        // Извлечение соли из saltedFaceEncodings
+        const extractedSalt = extractSalt(saltedFaceEncodings, pin);
+
+        // Восстановление saltedFaceEncodings с использованием исходного face_encodings и извлеченной соли
+        const recoveredSaltedFaceEncodings = recoverSaltedFaceEncodings(face_encodings, extractedSalt, pin)
+
+        // Восстановление face_encodings
+        const recoveredFaceEncodings = recoverFaceEncodings(saltedFaceEncodings, pin);
+
+        // Дешифрование
+        const decryptedData = await decryptData(encryptedData, privateKeyArmored, recoveredSaltedFaceEncodings);
+
 
 
         // const form = {

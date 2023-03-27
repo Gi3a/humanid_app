@@ -1,137 +1,129 @@
 import CryptoJS from 'crypto-js';
-import nacl from 'tweetnacl';
+import * as openpgp from 'openpgp';
 
-const passwordToKey = (password, salt) => {
-    const key = CryptoJS.PBKDF2(password, salt, {
-        keySize: 256 / 32,
-        iterations: 1000,
-    });
 
-    return key.toString(CryptoJS.enc.Hex);
-};
-
-const insertSalt = (face_encodings, salt, position) => {
-    face_encodings.splice(position, 0, ...salt);
-    return face_encodings;
-};
-
-const extractSalt = (saltedFaceEncodings, position) => {
-    const saltLength = 32;
-    const salt = saltedFaceEncodings.slice(position, position + saltLength);
-    const faceEncodings = saltedFaceEncodings.slice(0, position).concat(saltedFaceEncodings.slice(position + saltLength));
-    return {
-        faceEncodings: faceEncodings,
-        salt: salt
-    };
-};
-
-const validatePin = (pin, face_encodings_length) => {
-    return Number.isInteger(pin) && pin >= 0 && pin < face_encodings_length;
+// Генерирует соленное лицо
+export function generateSaltedFaceEncodings(face_encodings, pin) {
+    const salt = CryptoJS.SHA256(face_encodings + pin).toString();
+    const saltWithPin = salt + pin;
+    const position = parseInt(pin) % face_encodings.length;
+    const saltedFaceEncodings = face_encodings.slice(0, position) + saltWithPin + face_encodings.slice(position);
+    return { saltedFaceEncodings };
 }
 
-const generateKeyPair = (face_encodings, pin) => {
-    if (typeof face_encodings === 'string') {
-        face_encodings = face_encodings.split('');
+// Достает соль из лица
+export function extractSalt(saltedFaceEncodings, pin) {
+    const pinStr = pin.toString();
+    const saltWithPinLength = 64 + pinStr.length;
+    const position = parseInt(pin) % saltedFaceEncodings.length;
+    const saltWithPin = saltedFaceEncodings.substr(position, saltWithPinLength);
+    const salt = saltWithPin.substr(0, 64);
+    return salt;
+}
+
+// Восстановление соленного лица
+export function recoverSaltedFaceEncodings(faceEncodings, extractedSalt, pin) {
+    const pinStr = pin.toString();
+    const position = parseInt(pin) % faceEncodings.length;
+    return (
+        faceEncodings.slice(0, position) +
+        extractedSalt +
+        pinStr +
+        faceEncodings.slice(position)
+    );
+}
+
+// Восстановление оригинального лица
+export function recoverFaceEncodings(saltedFaceEncodings, pin) {
+    const pinStr = pin.toString();
+    const saltWithPinLength = 64 + pinStr.length;
+    const position = parseInt(pin) % saltedFaceEncodings.length;
+
+    const beforeSalt = saltedFaceEncodings.substring(0, position);
+
+    const afterSalt = saltedFaceEncodings.substring(position + saltWithPinLength);
+
+    const recoveredFaceEncodings = beforeSalt + afterSalt;
+
+    return recoveredFaceEncodings;
+}
+
+// def recover_face_encodings(salted_face_encodings, pin):
+//     pin_str = str(pin)
+//     salt_with_pin_length = 64 + len(pin_str)
+//     position = int(pin) % len(salted_face_encodings)
+
+//     before_salt = salted_face_encodings[:position]
+//     after_salt = salted_face_encodings[position + salt_with_pin_length:]
+
+//     recovered_face_encodings = before_salt + after_salt
+//     return recovered_face_encodings
+
+export async function encryptData(data, publicKeysArmored) {
+    if (!Array.isArray(publicKeysArmored)) {
+        publicKeysArmored = [publicKeysArmored];
     }
-    if (!validatePin(pin, face_encodings.length)) {
-        throw new Error("Invalid PIN");
-    }
-    const password = process.env.REACT_APP_PASSWORD;
-    const randomSalt = CryptoJS.lib.WordArray.random(16).toString();
-    const combinedSalt = randomSalt + pin;
-    const saltedFaceEncodings = insertSalt(face_encodings, combinedSalt, pin);
-    const secretKey = passwordToKey(password, JSON.stringify(saltedFaceEncodings));
-    const keyPair = nacl.box.keyPair.fromSecretKey(new Uint8Array(secretKey.match(/.{1,2}/g).map(byte => parseInt(byte, 16))));
 
-    return {
-        publicKey: Array.from(keyPair.publicKey).map(byte => byte.toString(16).padStart(2, '0')).join(''),
-        privateKey: Array.from(keyPair.secretKey).map(byte => byte.toString(16).padStart(2, '0')).join(''),
-        saltedFaceEncodings: saltedFaceEncodings,
-    };
-};
-
-
-const restoreKeyPair = (saltedFaceEncodings, pin) => {
-    if (typeof saltedFaceEncodings === 'string') {
-        saltedFaceEncodings = saltedFaceEncodings.split('');
-    }
-    const password = process.env.REACT_APP_PASSWORD;
-    const { faceEncodings, salt } = extractSalt(saltedFaceEncodings, pin);
-    const newSaltedFaceEncodings = insertSalt(faceEncodings, salt, pin);
-    const secretKey = passwordToKey(password, JSON.stringify(newSaltedFaceEncodings));
-    const keyPair = nacl.box.keyPair.fromSecretKey(new Uint8Array(secretKey.match(/.{1,2}/g).map(byte => parseInt(byte, 16))));
-
-    return {
-        publicKey: Array.from(keyPair.publicKey).map(byte => byte.toString(16).padStart(2, '0')).join(''),
-        privateKey: Array.from(keyPair.secretKey).map(byte => byte.toString(16).padStart(2, '0')).join(''),
-    };
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const encrypt = (text, publicKey, privateKey) => {
-    const nonce = nacl.randomBytes(nacl.box.nonceLength);
-    const encryptedMessage = nacl.box(
-        new Uint8Array(text.split('').map(char => char.charCodeAt(0))),
-        nonce,
-        new Uint8Array(publicKey.match(/.{1,2}/g).map(byte => parseInt(byte, 16))),
-        new Uint8Array(privateKey.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
+    const publicKeys = await Promise.all(
+        publicKeysArmored.map(armoredKey => openpgp.readKey({ armoredKey }))
     );
 
-    return {
-        nonce: Array.from(nonce).map(byte => byte.toString(16).padStart(2, '0')).join(''),
-        message: Array.from(encryptedMessage).map(byte => byte.toString(16).padStart(2, '0')).join(''),
-    };
-};
+    const encrypted = await openpgp.encrypt({
+        message: await openpgp.createMessage({ text: data }), // input as Message object
+        encryptionKeys: publicKeys,
+    });
 
-
-const decrypt = (encryptedMessage, publicKey, privateKey) => {
-    const decryptedMessage = nacl.box.open(
-        new Uint8Array(encryptedMessage.message.match(/.{1,2}/g).map(byte => parseInt(byte, 16))),
-        new Uint8Array(encryptedMessage.nonce.match(/.{1,2}/g).map(byte => parseInt(byte, 16))),
-        new Uint8Array(publicKey.match(/.{1,2}/g).map(byte => parseInt(byte, 16))),
-        new Uint8Array(privateKey.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
-    );
-
-    if (!decryptedMessage) {
-        throw new Error('Decryption failed');
-    }
-
-    return Array.from(decryptedMessage).map(byte => String.fromCharCode(byte)).join('');
-};
+    return encrypted;
+}
 
 
 
+export async function decryptData(encryptedData, privateKeyArmored, passphrase) {
 
-export { generateKeyPair, restoreKeyPair, encrypt, decrypt };
+    const privateKey = await openpgp.decryptKey({
+        privateKey: await openpgp.readPrivateKey({ armoredKey: privateKeyArmored }),
+        passphrase
+    });
 
 
-// Example
-// const keyPair = generateKeyPair(password, face_encodings);
-//         console.log('Сгенерированный ключевой пары:', keyPair);
+    const message = await openpgp.readMessage({
+        armoredMessage: encryptedData // parse armored message
+    });
 
-//         const restoredKeyPair = restoreKeyPair(password, face_encodings);
-//         console.log('Восстановленные ключевые пары:', restoredKeyPair);
+    const { data: decrypted, signatures } = await openpgp.decrypt({
+        message,
+        decryptionKeys: privateKey
+    });
 
-//         const text = 'Hello, world!';
-//         const encryptedData = encrypt(text, keyPair.publicKey, keyPair.privateKey);
-//         console.log('Зашифрованные данные:', encryptedData);
 
-//         const decryptedText = decrypt(encryptedData, keyPair.publicKey, keyPair.privateKey);
-//         console.log('Расшифрованный текст:', decryptedText);
+    return decrypted
+}
+
+export async function generateKeyPair(saltedFaceEncodings, name, email) {
+    const { privateKey, publicKey } = await openpgp.generateKey({
+        type: "rsa",
+        rsaBits: 2048,
+        userIDs: [{ name, email }],
+        passphrase: saltedFaceEncodings,
+    });
+
+    return { privateKeyArmored: privateKey, publicKeyArmored: publicKey };
+}
+
+
+// Instead letters using digitals
+// export function generateSaltedFaceEncodings(face_encodings, pin) {
+//     const salt = CryptoJS.SHA256(face_encodings + pin).toString();
+//     const saltWithPin = salt + pin;
+//     const position = parseInt(pin) % face_encodings.length;
+
+//     const saltedFaceEncodingsArray = face_encodings
+//       .split("")
+//       .map((char, index) => {
+//         const saltChar = saltWithPin[index % saltWithPin.length];
+//         return ((char.charCodeAt(0) + saltChar.charCodeAt(0)) % 10).toString();
+//       });
+
+//     const saltedFaceEncodings = saltedFaceEncodingsArray.join("");
+//     return { saltedFaceEncodings, salt };
+//   }
