@@ -14,7 +14,8 @@ export function useAuth() {
         date_of_issue,
         date_of_expiry,
         public_key,
-        private_key,
+        encrypted_public_key,
+        encrypted_private_key,
         phone,
         pin
     } = useSelector(state => state.user);
@@ -34,7 +35,8 @@ export function useAuth() {
         date_of_issue,
         date_of_expiry,
         public_key,
-        private_key,
+        encrypted_public_key,
+        encrypted_private_key,
         phone,
         pin
     }

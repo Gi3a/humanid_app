@@ -44,7 +44,7 @@ const SettingsPage = () => {
     useEffect(() => {
         if (token)
             navigate('/panel');
-        if (face_encodings && !token)
+        else if (face_encodings && !token)
             navigate('/settings');
         else
             navigate('/');

@@ -13,7 +13,8 @@ const initialState = {
     date_of_issue: null,
     date_of_expiry: null,
     public_key: null,
-    private_key: null,
+    encrypted_public_key: null,
+    encrypted_private_key: null,
     phone: null,
     pin: null,
 };
@@ -36,13 +37,16 @@ const userSlice = createSlice({
             state.date_of_issue = action.payload.date_of_issue;
             state.date_of_expiry = action.payload.date_of_expiry;
             state.public_key = action.payload.public_key;
-            state.private_key = action.payload.private_key;
+            state.encrypted_public_key = action.payload.encrypted_public_key;
+            state.encrypted_private_key = action.payload.encrypted_private_key;
             state.phone = action.payload.phone;
         },
         setAuth(state, action) {
             state.id = action.payload.id;
             state.token = action.payload.token;
             state.public_key = action.payload.public_key;
+            state.encrypted_public_key = action.encrypted_public_key;
+            state.encrypted_private_key = action.encrypted_private_key;
         },
         setFace(state, action) {
             state.face_encodings = action.payload.face_encodings;
@@ -65,11 +69,11 @@ const userSlice = createSlice({
         },
         setSecret(state, action) {
             state.pin = action.payload.pin;
-            state.private_key = action.payload.private_key;
+            state.encrypted_private_key = action.payload.private_key;
         },
         unsetSecret(state) {
             state.pin = null;
-            state.private_key = null;
+            state.encrypted_private_key = null;
         },
         unsetUser(state) {
             state.id = null;
@@ -85,7 +89,8 @@ const userSlice = createSlice({
             state.date_of_issue = null;
             state.date_of_expiry = null;
             state.public_key = null;
-            state.private_key = null;
+            state.encrypted_public_key = null;
+            state.encrypted_private_key = null;
             state.phone = null;
         },
     },

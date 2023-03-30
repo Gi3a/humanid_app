@@ -1,63 +1,18 @@
+import nacl from 'tweetnacl';
+import naclUtil from 'tweetnacl-util';
 import CryptoJS from 'crypto-js';
 import * as openpgp from 'openpgp';
+import { keccak256 } from 'js-sha3';
 
 
-// Генерирует соленное лицо
-export function generateSaltedFaceEncodings(face_encodings, pin) {
-    const salt = CryptoJS.SHA256(face_encodings + pin).toString();
-    const saltWithPin = salt + pin;
-    const position = parseInt(pin) % face_encodings.length;
-    const saltedFaceEncodings = face_encodings.slice(0, position) + saltWithPin + face_encodings.slice(position);
-    return { saltedFaceEncodings };
+// Генерирует PIN лицо
+export function generatePinnedFaceEncodings(face_encodings, pin) {
+    const position = parseInt(pin) % face_encodings.toString().length;
+    const saltedFaceEncodings = face_encodings.slice(0, position) + pin + face_encodings.slice(position);
+    const hash = CryptoJS.SHA256(saltedFaceEncodings).toString();
+    return hash;
 }
 
-// Достает соль из лица
-export function extractSalt(saltedFaceEncodings, pin) {
-    const pinStr = pin.toString();
-    const saltWithPinLength = 64 + pinStr.length;
-    const position = parseInt(pin) % saltedFaceEncodings.length;
-    const saltWithPin = saltedFaceEncodings.substr(position, saltWithPinLength);
-    const salt = saltWithPin.substr(0, 64);
-    return salt;
-}
-
-// Восстановление соленного лица
-export function recoverSaltedFaceEncodings(faceEncodings, extractedSalt, pin) {
-    const pinStr = pin.toString();
-    const position = parseInt(pin) % faceEncodings.length;
-    return (
-        faceEncodings.slice(0, position) +
-        extractedSalt +
-        pinStr +
-        faceEncodings.slice(position)
-    );
-}
-
-// Восстановление оригинального лица
-export function recoverFaceEncodings(saltedFaceEncodings, pin) {
-    const pinStr = pin.toString();
-    const saltWithPinLength = 64 + pinStr.length;
-    const position = parseInt(pin) % saltedFaceEncodings.length;
-
-    const beforeSalt = saltedFaceEncodings.substring(0, position);
-
-    const afterSalt = saltedFaceEncodings.substring(position + saltWithPinLength);
-
-    const recoveredFaceEncodings = beforeSalt + afterSalt;
-
-    return recoveredFaceEncodings;
-}
-
-// def recover_face_encodings(salted_face_encodings, pin):
-//     pin_str = str(pin)
-//     salt_with_pin_length = 64 + len(pin_str)
-//     position = int(pin) % len(salted_face_encodings)
-
-//     before_salt = salted_face_encodings[:position]
-//     after_salt = salted_face_encodings[position + salt_with_pin_length:]
-
-//     recovered_face_encodings = before_salt + after_salt
-//     return recovered_face_encodings
 
 export async function encryptData(data, publicKeysArmored) {
     if (!Array.isArray(publicKeysArmored)) {
@@ -69,7 +24,7 @@ export async function encryptData(data, publicKeysArmored) {
     );
 
     const encrypted = await openpgp.encrypt({
-        message: await openpgp.createMessage({ text: data }), // input as Message object
+        message: await openpgp.createMessage({ text: data }),
         encryptionKeys: publicKeys,
     });
 
@@ -87,10 +42,10 @@ export async function decryptData(encryptedData, privateKeyArmored, passphrase) 
 
 
     const message = await openpgp.readMessage({
-        armoredMessage: encryptedData // parse armored message
+        armoredMessage: encryptedData
     });
 
-    const { data: decrypted, signatures } = await openpgp.decrypt({
+    const { data: decrypted } = await openpgp.decrypt({
         message,
         decryptionKeys: privateKey
     });
@@ -99,31 +54,23 @@ export async function decryptData(encryptedData, privateKeyArmored, passphrase) 
     return decrypted
 }
 
-export async function generateKeyPair(saltedFaceEncodings, name, email) {
+export async function generateKeyPair(pinnedFaceEncodings, name, email) {
     const { privateKey, publicKey } = await openpgp.generateKey({
         type: "rsa",
         rsaBits: 2048,
         userIDs: [{ name, email }],
-        passphrase: saltedFaceEncodings,
+        passphrase: pinnedFaceEncodings,
     });
 
     return { privateKeyArmored: privateKey, publicKeyArmored: publicKey };
 }
 
+export function generatePublicKey(email, phone) {
+    const data = `${email}:${phone}`;
+    const publicKeyArray = nacl.hash(naclUtil.decodeUTF8(data));
 
-// Instead letters using digitals
-// export function generateSaltedFaceEncodings(face_encodings, pin) {
-//     const salt = CryptoJS.SHA256(face_encodings + pin).toString();
-//     const saltWithPin = salt + pin;
-//     const position = parseInt(pin) % face_encodings.length;
+    // Ethereum address is the last 20 bytes of the keccak256 hash of the public key
+    const publicKey = '0x' + keccak256.array(publicKeyArray).slice(-20).map(byte => byte.toString(16).padStart(2, '0')).join('');
 
-//     const saltedFaceEncodingsArray = face_encodings
-//       .split("")
-//       .map((char, index) => {
-//         const saltChar = saltWithPin[index % saltWithPin.length];
-//         return ((char.charCodeAt(0) + saltChar.charCodeAt(0)) % 10).toString();
-//       });
-
-//     const saltedFaceEncodings = saltedFaceEncodingsArray.join("");
-//     return { saltedFaceEncodings, salt };
-//   }
+    return publicKey;
+}

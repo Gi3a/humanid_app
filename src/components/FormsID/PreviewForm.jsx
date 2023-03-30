@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Confetti from 'react-confetti';
+import { useDispatch } from 'react-redux';
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 
 import { useAuth } from '../../hooks/use-auth';
+import { setAuth } from '../../store/slices/userSlice';
 
 import { Div } from '../UI/Div';
 import { Popup } from '../UI/Popup';
@@ -13,16 +15,16 @@ import { Submit } from '../UI/Submit';
 import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
 import {
-    generateSaltedFaceEncodings,
-    extractSalt,
+    generatePinnedFaceEncodings,
     generateKeyPair,
-    recoverFaceEncodings,
+    generatePublicKey,
     encryptData,
-    decryptData,
-    recoverSaltedFaceEncodings
+    decryptData
 } from '../../utils/crypto';
 
 export const PreviewForm = ({ handleNext, handleBack }) => {
+
+    const dispatch = useDispatch();
 
     const [showModal, setShowModal] = useState(false);
 
@@ -62,83 +64,74 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
 
 
         // Генерация saltedFaceEncodings
-        const { saltedFaceEncodings } = generateSaltedFaceEncodings(face_encodings, pin);
-        console.log(face_encodings)
+        const pinnedFaceEncodings = generatePinnedFaceEncodings(face_encodings, pin);
 
         // Одиночная генерация
-        const { privateKeyArmored, publicKeyArmored } = await generateKeyPair(saltedFaceEncodings, firstname + ' ' + lastname, email);
+        const { privateKeyArmored, publicKeyArmored } = await generateKeyPair(pinnedFaceEncodings, firstname + ' ' + lastname, email);
 
 
-        // Оригинальные данные для шифрования
-        const originalData = "Hello, worlsssd!";
+        // // Одиночное шифрование
+        // const encryptedData = await encryptData("Hello, worlsssd!", [publicKeyArmored]);
 
-        // Одиночное шифрование
-        const encryptedData = await encryptData(originalData, publicKeyArmored);
+        // // Дешифрование
+        // const decryptedData = await decryptData(encryptedData, privateKeyArmored, pinnedFaceEncodings);
 
-        // Массовое шифрование
-        // const encryptedData = await encryptData(originalData, [publicKey1, publicKey2]);
+        const personal_data = {
+            // L1
+            firstname: firstname,
+            lastname: lastname,
+            date_of_birth: date_of_birth,
+            // L2
+            email: email,
+            phone: phone,
+            // L3
+            id_number: id_number,
+            nationality: nationality,
+            date_of_issue: date_of_issue,
+            date_of_expiry: date_of_expiry,
+        }
 
-        // Извлечение соли из saltedFaceEncodings
-        const extractedSalt = extractSalt(saltedFaceEncodings, pin);
+        const publicKey = generatePublicKey(email, phone);
+        const encryptedData = await encryptData(JSON.stringify(personal_data), [publicKeyArmored]);
 
-        // Восстановление saltedFaceEncodings с использованием исходного face_encodings и извлеченной соли
-        const recoveredSaltedFaceEncodings = recoverSaltedFaceEncodings(face_encodings, extractedSalt, pin)
-
-        // Восстановление face_encodings
-        const recoveredFaceEncodings = recoverFaceEncodings(saltedFaceEncodings, pin);
-
-        // Дешифрование
-        const decryptedData = await decryptData(encryptedData, privateKeyArmored, recoveredSaltedFaceEncodings);
-
-
-
-        // const form = {
-        //     // L1
-        //     firstname: firstname,
-        //     lastname: lastname,
-        //     date_of_birth: date_of_birth,
-        //     // L2
-        //     email: email,
-        //     phone: phone,
-        //     // L3
-        //     id_number: id_number,
-        //     nationality: nationality,
-        //     date_of_issue: date_of_issue,
-        //     date_of_expiry: date_of_expiry,
-        //     // L4
-        //     public_key: publicKey,
-        //     private_key: encryptedPrivateKey,
-        //     face_encodings: face_encodings,
-        // };
+        const form = {
+            personal_data: encryptedData,
+            public_key: publicKey,
+            encrypted_public_key: publicKeyArmored,
+            encrypted_private_key: privateKeyArmored,
+            face_encodings: face_encodings,
+        };
 
 
-        // await axios({
-        //     method: "post",
-        //     url: `http://127.0.0.1:8000/join`,
-        //     // headers: {
-        //     //     "Content-Type": "application/json",
-        //     //     "Authorization": `Bearer ${token}`
-        //     // },
-        //     data: form
-        // })
-        //     .then((response) => {
-        //         console.log(response);
-        //         setShowModal(false);
-        //         Swal.fire('Great job!', response.message, 'success');
-        //         // get info from smartcontract
-        //         // if (response.data.face_encodings) {
-        //         //     console.log('isnt identified')
-        //         //     dispatch(setFace({
-        //         //         face_encodings: response.data.face_encodings,
-        //         //     }));
-        //         // }
-        //         return <Confetti />
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //         Swal.fire('Error', error.message, 'error');
-        //         setShowModal(false);
-        //     });
+        await axios({
+            method: "post",
+            url: `http://127.0.0.1:8000/registration`,
+            data: form
+        })
+            .then((response) => {
+                console.log(response.data)
+                setShowModal(false);
+                if (response.data.access_token) {
+                    Swal.fire('Great job!', response.message, 'success');
+                    console.log('registered')
+                    const access_token = response.data.access_token;
+                    const person = response.data.person;
+                    dispatch(setAuth({
+                        id: person.id,
+                        public_key: person.public_key,
+                        token: access_token,
+                    }));
+                }
+                else {
+                    Swal.fire(response.data.message, '', 'info');
+                }
+                return <Confetti />
+            })
+            .catch((error) => {
+                console.log(error);
+                Swal.fire('Error', error.message, 'error');
+                setShowModal(false);
+            });
     };
 
     const handleCancel = () => {

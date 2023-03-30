@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
 
 import * as faceapi from 'face-api.js';
 
@@ -157,12 +157,12 @@ const FaceID = () => {
                     // Person is Identified
                     else if (response.data.access_token) {
                         console.log('identified')
-                        const jwt_token = response.data.jwt_token;
+                        const access_token = response.data.access_token;
                         const person = response.data.person;
                         dispatch(setAuth({
                             id: person.id,
                             public_key: person.public_key,
-                            token: jwt_token,
+                            token: access_token,
                         }));
                     }
                 } else {

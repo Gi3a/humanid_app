@@ -3,7 +3,6 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import PrivateRoute from './PrivateRoute';
-import OppositeRoute from './OppositeRoute';
 
 import DevPage from '../../pages/DevPage';
 import ErrorPage from '../../pages/ErrorPage';
@@ -20,10 +19,8 @@ export const AppRouter = () => {
             <Route path="*" element={<ErrorPage />} />
             <Route path="/dev" element={<DevPage />} />
             {/* Authenticated Route */}
-            <Route element={<OppositeRoute />}>
-                <Route path="/" element={<IdentityPage />} />
-                <Route path='/settings' element={<SettingsPage />} />
-            </Route>
+            <Route path="/" element={<IdentityPage />} />
+            <Route path='/settings' element={<SettingsPage />} />
             {/* Protected Route */}
             <Route element={<PrivateRoute />}>
                 <Route path='/panel' element={<PanelPage />} />
