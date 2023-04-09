@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Typography, Stepper, Step, StepLabel, StepConnector } from '@mui/material';
 
-import { useAuth } from '../hooks/use-auth';
 import { useTitle } from '../hooks/use-title';
 import { Page } from '../components/UI/Page';
-
-import { useNavigate } from 'react-router-dom';
 
 import { PersonalForm } from '../components/FormsID/PersonalForm';
 import { PassportForm } from '../components/FormsID/PassportForm';
@@ -38,18 +35,7 @@ const SettingsPage = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [isFormError, setIsFormError] = useState(false);
 
-    const { token, face_encodings } = useAuth();
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        if (token)
-            navigate('/panel');
-        else if (face_encodings && !token)
-            navigate('/settings');
-        else
-            navigate('/');
-
-    }, [token, face_encodings, navigate]);
 
     const handleStep = (step) => () => {
         setActiveStep(step);

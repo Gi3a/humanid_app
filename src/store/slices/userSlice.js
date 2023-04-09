@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    id: null,
     token: null,
     face_encodings: null,
     id_number: null,
@@ -24,7 +23,6 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUser(state, action) {
-            state.id = action.payload.id;
             state.token = action.payload.token;
             state.face_encodings = action.payload.face_encodings;
             state.id_number = action.payload.id_number;
@@ -42,9 +40,9 @@ const userSlice = createSlice({
             state.phone = action.payload.phone;
         },
         setAuth(state, action) {
-            state.id = action.payload.id;
             state.token = action.payload.token;
             state.public_key = action.payload.public_key;
+            state.face_encodings = action.payload.face_encodings;
             state.encrypted_public_key = action.encrypted_public_key;
             state.encrypted_private_key = action.encrypted_private_key;
         },
@@ -76,7 +74,6 @@ const userSlice = createSlice({
             state.encrypted_private_key = null;
         },
         unsetUser(state) {
-            state.id = null;
             state.token = null;
             state.face_encodings = null;
             state.id_number = null;

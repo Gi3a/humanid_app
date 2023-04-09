@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import Confetti from 'react-confetti';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setLoad } from '../../store/slices/loadSlice';
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 
 import { useAuth } from '../../hooks/use-auth';
 import { setAuth } from '../../store/slices/userSlice';
+
 
 import { Div } from '../UI/Div';
 import { Popup } from '../UI/Popup';
@@ -18,15 +20,19 @@ import {
     generatePinnedFaceEncodings,
     generateKeyPair,
     generatePublicKey,
-    encryptData,
-    decryptData
+    encryptData
 } from '../../utils/crypto';
 
 export const PreviewForm = ({ handleNext, handleBack }) => {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const [showModal, setShowModal] = useState(false);
+
+    const handleLoading = () => {
+        dispatch(setLoad());
+    }
 
     const {
         firstname,
@@ -39,7 +45,8 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
         date_of_expiry,
         email,
         phone,
-        pin
+        pin,
+        token
     } = useAuth();
 
 
@@ -47,35 +54,22 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
         setShowModal(true);
     };
 
-
-    // const generationKeys = async () => {
-    //     const keyPair = await generateKeyPair();
-    //     const privateKeyBuffer = await exportPrivateKey(keyPair);
-    //     const publicKey = keyPair.publicKey;
-    //     const combinedKey = password + face_encodings;
-    //     const encryptedData = await encryptPrivateKey(privateKeyBuffer, combinedKey);
-    //     return { publicKey, encryptedData }
-    // }
-
-
-
     const handleConfirm = async () => {
+        handleLoading();
 
+        var url_method = `registration`;
 
+        if (token)
+            url_method = 'update';
 
-        // Генерация saltedFaceEncodings
+        // SALT Generation
         const pinnedFaceEncodings = generatePinnedFaceEncodings(face_encodings, pin);
 
-        // Одиночная генерация
+        // Keys Generation
         const { privateKeyArmored, publicKeyArmored } = await generateKeyPair(pinnedFaceEncodings, firstname + ' ' + lastname, email);
+        const publicKey = generatePublicKey(email, phone);
 
-
-        // // Одиночное шифрование
-        // const encryptedData = await encryptData("Hello, worlsssd!", [publicKeyArmored]);
-
-        // // Дешифрование
-        // const decryptedData = await decryptData(encryptedData, privateKeyArmored, pinnedFaceEncodings);
-
+        // Personal Data
         const personal_data = {
             // L1
             firstname: firstname,
@@ -89,49 +83,61 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
             nationality: nationality,
             date_of_issue: date_of_issue,
             date_of_expiry: date_of_expiry,
+            public_key: publicKey
         }
-
-        const publicKey = generatePublicKey(email, phone);
+        // Data encryption
         const encryptedData = await encryptData(JSON.stringify(personal_data), [publicKeyArmored]);
-
+        // Data forming
         const form = {
-            personal_data: encryptedData,
+            old_public_key: '???',
             public_key: publicKey,
+            personal_data: encryptedData,
             encrypted_public_key: publicKeyArmored,
             encrypted_private_key: privateKeyArmored,
             face_encodings: face_encodings,
         };
-
-
+        // Data sendting
         await axios({
             method: "post",
-            url: `http://127.0.0.1:8000/registration`,
-            data: form
+            url: `${process.env.REACT_APP_API_URL}/${url_method}`,
+            data: form,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         })
             .then((response) => {
-                console.log(response.data)
+                console.log(response.data);
+                handleLoading();
                 setShowModal(false);
-                if (response.data.access_token) {
-                    Swal.fire('Great job!', response.message, 'success');
-                    console.log('registered')
-                    const access_token = response.data.access_token;
-                    const person = response.data.person;
-                    dispatch(setAuth({
-                        id: person.id,
-                        public_key: person.public_key,
-                        token: access_token,
-                    }));
+                if (response.data) {
+                    if (response.data.access_token) {
+                        Swal.fire('Great job!', response.message, 'success');
+                        console.log('registered')
+                        const access_token = response.data.access_token;
+                        const person = response.data.person;
+                        dispatch(setAuth({
+                            id: person.id,
+                            public_key: person.public_key,
+                            token: access_token,
+                            face_encodings: person.face_encodings
+                        }));
+                        navigate('/panel');
+                    }
+                    else {
+                        Swal.fire(response.message, 'Try again', 'info');
+                    }
                 }
                 else {
-                    Swal.fire(response.data.message, '', 'info');
+                    Swal.fire(response.message, 'Try again', 'info');
+                    navigate('/settings');
                 }
-                return <Confetti />
             })
             .catch((error) => {
                 console.log(error);
                 Swal.fire('Error', error.message, 'error');
                 setShowModal(false);
             });
+
     };
 
     const handleCancel = () => {
