@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 export function useAuth() {
     const {
         token,
+        face,
         face_encodings,
         id_number,
         email,
@@ -23,6 +24,7 @@ export function useAuth() {
     return {
         isAuth: !!token,
         token,
+        face,
         face_encodings,
         id_number,
         email,

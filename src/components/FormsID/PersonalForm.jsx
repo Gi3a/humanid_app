@@ -11,6 +11,9 @@ import { setPersonal } from '../../store/slices/userSlice';
 import { Form } from '../UI/Form';
 import { Input } from '../UI/Input';
 import { Submit } from '../UI/Submit';
+import { formatDate } from '../../utils/date';
+
+
 
 const schema = yup.object().shape({
     firstname: yup
@@ -36,7 +39,7 @@ export const PersonalForm = ({ handleNext }) => {
         defaultValues: {
             firstname: firstname,
             lastname: lastname,
-            date_of_birth: new Date(date_of_birth).toISOString().substr(0, 10)
+            date_of_birth: formatDate(new Date(date_of_birth)),
         },
         mode: 'onBlur',
         resolver: yupResolver(schema)

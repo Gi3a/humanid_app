@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     token: null,
+    face: null,
     face_encodings: null,
     id_number: null,
     email: null,
@@ -24,6 +25,7 @@ const userSlice = createSlice({
     reducers: {
         setUser(state, action) {
             state.token = action.payload.token;
+            state.face = action.payload.face;
             state.face_encodings = action.payload.face_encodings;
             state.id_number = action.payload.id_number;
             state.email = action.payload.email;
@@ -47,6 +49,7 @@ const userSlice = createSlice({
             state.encrypted_private_key = action.encrypted_private_key;
         },
         setFace(state, action) {
+            state.face = action.payload.face;
             state.face_encodings = action.payload.face_encodings;
         },
         setPersonal(state, action) {
@@ -65,16 +68,20 @@ const userSlice = createSlice({
             state.phone = action.payload.phone;
             state.pin = action.payload.pin;
         },
+        setKeys(state, action) {
+            state.encrypted_public_key = action.encrypted_public_key;
+            state.encrypted_private_key = action.encrypted_private_key;
+        },
         setSecret(state, action) {
             state.pin = action.payload.pin;
             state.encrypted_private_key = action.payload.private_key;
         },
         unsetSecret(state) {
             state.pin = null;
-            state.encrypted_private_key = null;
         },
         unsetUser(state) {
             state.token = null;
+            state.face = null;
             state.face_encodings = null;
             state.id_number = null;
             state.email = null;
@@ -93,6 +100,6 @@ const userSlice = createSlice({
     },
 });
 
-export const { setUser, setSecret, setPersonal, setAuth, setFace, setPassport, setAdditional, unsetSecret, unsetUser } = userSlice.actions;
+export const { setUser, setSecret, setPersonal, setAuth, setFace, setKeys, setPassport, setAdditional, unsetSecret, unsetUser } = userSlice.actions;
 
 export default userSlice.reducer;

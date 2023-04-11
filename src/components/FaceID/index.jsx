@@ -33,6 +33,7 @@ const FaceID = () => {
 
 
     const [start, setStart] = useState(false);
+    const [faceImg, setFaceImg] = useState('');
     const [isSent, setIsSent] = useState(false);
     const [intervalID, setIntervalID] = useState(0);
     const [isModelLoaded, setIsModelLoaded] = useState(false);
@@ -104,6 +105,7 @@ const FaceID = () => {
 
                             if (face) {
                                 stopCamera();
+                                setFaceImg(face);
                                 handleSend(face);
                             }
 
@@ -172,21 +174,26 @@ const FaceID = () => {
 
 
             try {
+                dispatch(setLoad());
                 setShowMessage('Emotion test passed succesfully! Data is sending...');
                 response = await axios.post(`${process.env.REACT_APP_API_URL}/identification`, form);
                 setShowMessage('Emotion test passed succesfully! Data is sending...');
             } catch (error) {
+                dispatch(setLoad());
                 console.error(error);
                 Swal.fire('Error', error.message, 'error');
             } finally {
+                dispatch(setLoad());
                 if (response.status === 200) {
                     setIsSent(true);
                     // Person isn't Identified
                     if (response.data.face_encodings) {
                         console.log('isnt identified')
                         dispatch(setFace({
+                            face: response.data.face.face_image,
                             face_encodings: response.data.face_encodings,
                         }));
+                        console.log(faceImg)
                         navigate('/settings');
                     }
                     // Person is Identified
@@ -220,6 +227,7 @@ const FaceID = () => {
                                 const decryptedData = JSON.parse(await decryptData(person.personal_data, person.encrypted_private_key, pinnedFaceEncodings));
                                 if (person.public_key.localeCompare(decryptedData.public_key))
                                     dispatch(setUser({
+                                        face: person.face,
                                         public_key: person.public_key,
                                         token: access_token,
                                         face_encodings: person.face_encodings,
@@ -250,6 +258,7 @@ const FaceID = () => {
                 }
             }
         } else {
+            dispatch(setLoad());
             console.log('No image to send.');
             Swal.fire(response.message, 'Try again', 'error');
             navigate('/');
@@ -258,6 +267,7 @@ const FaceID = () => {
 
     const capture = useCallback(() => {
         const face = webcamRef.current.getScreenshot();
+        setFaceImg(face);
         setShowMessage('Emotion test passed succesfully! Data is sending...');
         return face
     }, [webcamRef]);

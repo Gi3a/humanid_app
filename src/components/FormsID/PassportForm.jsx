@@ -12,6 +12,8 @@ import { Form } from '../UI/Form';
 import { Input } from '../UI/Input';
 import { Submit } from '../UI/Submit';
 import { ButtonGroup } from '../UI/Group/ButtonGroup';
+import { formatDate } from '../../utils/date';
+
 
 const schema = yup.object().shape({
     id_number: yup
@@ -39,8 +41,8 @@ export const PassportForm = ({ handleNext, handleBack }) => {
         defaultValues: {
             id_number: id_number,
             nationality: nationality,
-            date_of_issue: new Date(date_of_issue).toISOString().substr(0, 10),
-            date_of_expiry: new Date(date_of_expiry).toISOString().substr(0, 10),
+            date_of_issue: formatDate(new Date(date_of_issue)),
+            date_of_expiry: formatDate(new Date(date_of_expiry)),
         },
         mode: 'onBlur',
         resolver: yupResolver(schema)
