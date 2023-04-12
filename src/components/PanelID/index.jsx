@@ -43,6 +43,7 @@ const PanelID = () => {
         email,
         face_encodings,
         phone,
+        face,
         token,
         public_key,
         encrypted_public_key,
@@ -106,17 +107,13 @@ const PanelID = () => {
 
     return (
         <Div className={styles.panelid}>
-
+            <img src={face} alt="Face" />
             <TableContainer>
                 <Table>
                     <TableBody>
                         <TableRow>
-                            <TableCell>First Name:</TableCell>
-                            <TableCell>{firstname}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Last Name:</TableCell>
-                            <TableCell>{lastname}</TableCell>
+                            <TableCell>Name:</TableCell>
+                            <TableCell>{firstname + ' ' + lastname}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Date of Birth:</TableCell>

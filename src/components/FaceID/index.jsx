@@ -227,7 +227,7 @@ const FaceID = () => {
                                 const decryptedData = JSON.parse(await decryptData(person.personal_data, person.encrypted_private_key, pinnedFaceEncodings));
                                 if (person.public_key.localeCompare(decryptedData.public_key))
                                     dispatch(setUser({
-                                        face: person.face,
+                                        face: response.data.face.face_image,
                                         public_key: person.public_key,
                                         token: access_token,
                                         face_encodings: person.face_encodings,
