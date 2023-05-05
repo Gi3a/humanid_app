@@ -24,7 +24,7 @@ const normalizePhoneNumber = (value) => {
 
 export const AdditionalForm = ({ handleNext, handleBack }) => {
 
-    const { email, phone, pin, face_encodings } = useAuth();
+    const { email, phone, pin, face_encodings, token } = useAuth();
 
     const dispatch = useDispatch();
 
@@ -96,15 +96,17 @@ export const AdditionalForm = ({ handleNext, handleBack }) => {
                 error={!!errors.phone}
                 helperText={errors?.phone?.message}
             />
-            <Input
-                {...register('pin', { required: true })}
-                id='pin'
-                type='number'
-                label='PIN'
-                name='pin'
-                error={!!errors.pin}
-                helperText={errors?.pin?.message}
-            />
+            {!token &&
+                <Input
+                    {...register('pin', { required: true })}
+                    id='pin'
+                    type='number'
+                    label='PIN'
+                    name='pin'
+                    error={!!errors.pin}
+                    helperText={errors?.pin?.message}
+                />
+            }
             <ButtonGroup>
                 <Submit onClick={handleBack}>⬅️ Back</Submit>
                 <Submit onClick={handleSubmit(onSubmit)}>Next ➡️</Submit>

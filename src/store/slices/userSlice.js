@@ -45,8 +45,9 @@ const userSlice = createSlice({
             state.token = action.payload.token;
             state.public_key = action.payload.public_key;
             state.face_encodings = action.payload.face_encodings;
-            state.encrypted_public_key = action.encrypted_public_key;
-            state.encrypted_private_key = action.encrypted_private_key;
+            state.encrypted_public_key = action.payload.encrypted_public_key;
+            state.encrypted_private_key = action.payload.encrypted_private_key;
+            state.pin = action.payload.pin;
         },
         setFace(state, action) {
             state.face = action.payload.face;
@@ -69,8 +70,8 @@ const userSlice = createSlice({
             state.pin = action.payload.pin;
         },
         setKeys(state, action) {
-            state.encrypted_public_key = action.encrypted_public_key;
-            state.encrypted_private_key = action.encrypted_private_key;
+            state.encrypted_public_key = action.payload.encrypted_public_key;
+            state.encrypted_private_key = action.payload.encrypted_private_key;
         },
         setSecret(state, action) {
             state.pin = action.payload.pin;

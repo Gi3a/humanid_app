@@ -241,7 +241,8 @@ const FaceID = () => {
                                         date_of_birth: decryptedData.date_of_birth,
                                         date_of_issue: decryptedData.date_of_issue,
                                         date_of_expiry: decryptedData.date_of_expiry,
-                                        phone: decryptedData.phone
+                                        phone: decryptedData.phone,
+                                        pin: result.value
                                     }));
                             } catch (error) {
                                 Swal.fire('Incorrect PIN', 'Try again', 'error').then((result) => {
@@ -283,7 +284,6 @@ const FaceID = () => {
 
 
     const handleStart = () => {
-        console.log('click')
         setStart(true);
         handleLoading();
     };

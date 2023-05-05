@@ -9,7 +9,7 @@ import { setLoad } from '../../store/slices/loadSlice';
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 
 import { useAuth } from '../../hooks/use-auth';
-import { setAuth, unsetSecret, setKeys } from '../../store/slices/userSlice';
+import { setAuth, setKeys } from '../../store/slices/userSlice';
 
 
 import { Div } from '../UI/Div';
@@ -50,12 +50,15 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
         email,
         phone,
         pin,
-        token
+        token,
+        public_key,
+        encrypted_public_key,
+        encrypted_private_key,
     } = useAuth();
 
 
     const handleSubmit = () => {
-        if (!pin) {
+        if (!token && !pin) {
             Swal.fire('Missing PIN', 'Please fill in the PIN field in Additional Data', 'info');
         } else if (!email) {
             Swal.fire('Missing Email', 'Please fill in the Email field in Additional Data', 'info');
@@ -74,16 +77,31 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
         handleLoading();
 
         var url_method = `registration`;
+        var publicKey;
+        let publicKeyArmored;
+        let privateKeyArmored;
 
         if (token)
             url_method = 'update';
+
+
+        console.log(url_method)
+
 
         // SALT Generation
         const pinnedFaceEncodings = generatePinnedFaceEncodings(face_encodings, pin);
 
         // Keys Generation
-        const { privateKeyArmored, publicKeyArmored } = await generateKeyPair(pinnedFaceEncodings, firstname + ' ' + lastname, email);
-        const publicKey = generatePublicKey(email, phone);
+        if (token) {
+            publicKey = public_key;
+            privateKeyArmored = encrypted_private_key;
+            publicKeyArmored = encrypted_public_key;
+        } else {
+            const { privateKeyArmored: generatedPrivateKeyArmored, publicKeyArmored: generatedPublicKeyArmored } = await generateKeyPair(pinnedFaceEncodings, firstname + ' ' + lastname, email);
+            privateKeyArmored = generatedPrivateKeyArmored;
+            publicKeyArmored = generatedPublicKeyArmored;
+            publicKey = generatePublicKey(email, phone);
+        }
 
         // Personal Data
         const personal_data = {
@@ -135,8 +153,8 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
                             face_encodings: person.face_encodings,
                             encrypted_public_key: publicKeyArmored,
                             encrypted_private_key: privateKeyArmored,
+                            pin: pin,
                         }));
-                        dispatch(unsetSecret({ pin: pin }));
                         Swal.fire('Great job!', response.message, 'success');
                         navigate('/panel');
                     }
@@ -199,10 +217,12 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
                             <TableCell>Phone:</TableCell>
                             <TableCell>{phone}</TableCell>
                         </TableRow>
-                        <TableRow>
-                            <TableCell>PIN:</TableCell>
-                            <TableCell>{pin}</TableCell>
-                        </TableRow>
+                        {!token &&
+                            <TableRow>
+                                <TableCell>PIN:</TableCell>
+                                <TableCell>{pin}</TableCell>
+                            </TableRow>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>
