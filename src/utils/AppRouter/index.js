@@ -9,9 +9,11 @@ import { Routes, Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import Layout from '../../components/Layout';
 
+import IdPage from '../../pages/IdPage';
 import DevPage from '../../pages/DevPage';
 import ErrorPage from '../../pages/ErrorPage';
 import PanelPage from '../../pages/PanelPage';
+import SharePage from '../../pages/SharePage';
 import IdentityPage from '../../pages/IdentityPage';
 import SettingsPage from '../../pages/SettingsPage';
 
@@ -54,7 +56,9 @@ export const AppRouter = () => {
                 <Route path='/settings' element={<SettingsPage />} />
                 {/* Protected Route */}
                 <Route element={<PrivateRoute />}>
+                    <Route path='/id' element={<IdPage />} />
                     <Route path='/panel' element={<PanelPage />} />
+                    <Route path='/id/:user_id' element={<SharePage />} />
                 </Route>
             </Route>
         </Routes>

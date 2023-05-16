@@ -149,6 +149,7 @@ const PanelID = () => {
             <ButtonGroup>
                 <Submit onClick={() => dispatch(unsetUser())}>🚪 Exit</Submit>
                 <Submit onClick={() => navigate('/settings')}>⚙️ Settings</Submit>
+                <Submit onClick={() => navigate('/id')}>🪪 ID</Submit>
                 <Submit onClick={handleSubmit}>💀 Kill</Submit>
             </ButtonGroup>
 

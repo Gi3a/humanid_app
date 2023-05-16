@@ -225,25 +225,24 @@ const FaceID = () => {
                             const pinnedFaceEncodings = generatePinnedFaceEncodings(person.face_encodings, result.value);
                             try {
                                 const decryptedData = JSON.parse(await decryptData(person.personal_data, person.encrypted_private_key, pinnedFaceEncodings));
-                                if (person.public_key.localeCompare(decryptedData.public_key))
-                                    dispatch(setUser({
-                                        face: response.data.face.face_image,
-                                        public_key: person.public_key,
-                                        token: access_token,
-                                        face_encodings: person.face_encodings,
-                                        encrypted_public_key: person.encrypted_public_key,
-                                        encrypted_private_key: person.encrypted_private_key,
-                                        id_number: decryptedData.id_number,
-                                        email: decryptedData.email,
-                                        firstname: decryptedData.firstname,
-                                        lastname: decryptedData.lastname,
-                                        nationality: decryptedData.nationality,
-                                        date_of_birth: decryptedData.date_of_birth,
-                                        date_of_issue: decryptedData.date_of_issue,
-                                        date_of_expiry: decryptedData.date_of_expiry,
-                                        phone: decryptedData.phone,
-                                        pin: result.value
-                                    }));
+                                dispatch(setUser({
+                                    face: response.data.face.face_image,
+                                    public_key: person.public_key,
+                                    token: access_token,
+                                    face_encodings: person.face_encodings,
+                                    encrypted_public_key: person.encrypted_public_key,
+                                    encrypted_private_key: person.encrypted_private_key,
+                                    id_number: decryptedData.id_number,
+                                    email: decryptedData.email,
+                                    firstname: decryptedData.firstname,
+                                    lastname: decryptedData.lastname,
+                                    nationality: decryptedData.nationality,
+                                    date_of_birth: decryptedData.date_of_birth,
+                                    date_of_issue: decryptedData.date_of_issue,
+                                    date_of_expiry: decryptedData.date_of_expiry,
+                                    phone: decryptedData.phone,
+                                    pin: result.value
+                                }));
                             } catch (error) {
                                 Swal.fire('Incorrect PIN', 'Try again', 'error').then((result) => {
                                     if (result.isConfirmed)

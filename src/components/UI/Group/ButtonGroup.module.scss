@@ -1,16 +1,18 @@
 .button_group {
     display: flex;
     flex-direction: row;
+    align-items: center;
 
     &>* {
         width: 50% !important;
+        margin: 1% !important;
     }
 
-    &>*:first-child {
-        margin-right: 2% !important;
-    }
+    // &>*:first-child {
+    //     margin-right: 2% !important;
+    // }
 
-    &>*:last-child {
-        margin-left: 2% !important;
-    }
+    // &>*:last-child {
+    //     margin-left: 2% !important;
+    // }
 }
