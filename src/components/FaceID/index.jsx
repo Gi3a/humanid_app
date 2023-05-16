@@ -244,7 +244,7 @@ const FaceID = () => {
                                     pin: result.value
                                 }));
                             } catch (error) {
-                                Swal.fire('Incorrect PIN', 'Try again', 'error').then((result) => {
+                                Swal.fire('Incorrect PIN', 'Try again!', 'error').then((result) => {
                                     if (result.isConfirmed)
                                         window.location.reload();
                                 })
