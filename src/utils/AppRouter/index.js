@@ -13,9 +13,12 @@ import IdPage from '../../pages/IdPage';
 import DevPage from '../../pages/DevPage';
 import ErrorPage from '../../pages/ErrorPage';
 import PanelPage from '../../pages/PanelPage';
+import AccessPage from '../../pages/AccessPage';
 import SharePage from '../../pages/SharePage';
 import IdentityPage from '../../pages/IdentityPage';
 import SettingsPage from '../../pages/SettingsPage';
+
+
 
 
 export const AppRouter = () => {
@@ -58,7 +61,8 @@ export const AppRouter = () => {
                 <Route element={<PrivateRoute />}>
                     <Route path='/id' element={<IdPage />} />
                     <Route path='/panel' element={<PanelPage />} />
-                    <Route path='/id/:user_id' element={<SharePage />} />
+                    <Route path='/:user_name/:user_id' element={<SharePage />} />
+                    <Route path='/access/:user_id' element={<AccessPage />} />
                 </Route>
             </Route>
         </Routes>

@@ -40,10 +40,11 @@ const CardID = () => {
     }
 
     const {
-        public_key
+        public_key,
+        firstname
     } = useAuth();
 
-    const share_id = `${process.env.REACT_APP_APP_URL}/id/${public_key}`;
+    const share_id = `${process.env.REACT_APP_APP_URL}/${firstname}/${public_key}`;
 
     return (
         <Div className={styles.cardid}>

@@ -8,7 +8,7 @@ import { Page } from '../components/UI/Page';
 
 const IdentyPage = () => {
 
-    useTitle('🌐 Identification');
+    useTitle('Identification');
 
     return (
         <Page>

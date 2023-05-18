@@ -30,7 +30,7 @@ const NonLinearStepper = (props) => {
 
 const SettingsPage = () => {
 
-    useTitle('⚙️ Settings');
+    useTitle('Settings');
 
     const [activeStep, setActiveStep] = useState(0);
     const [isFormError, setIsFormError] = useState(false);

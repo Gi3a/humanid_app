@@ -10,7 +10,7 @@ import ShareID from '../components/ShareID';
 
 const SharePage = () => {
 
-    useTitle('🔗 Share');
+    useTitle('Share');
 
     return (
         <Page>

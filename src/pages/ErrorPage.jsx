@@ -8,7 +8,7 @@ import { Page } from '../components/UI/Page';
 
 const ErrorPage = () => {
 
-    useTitle('🔥 Error');
+    useTitle('Error');
 
     return (
         <Page>
