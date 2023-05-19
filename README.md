@@ -1,4 +1,4 @@
-# HumanID App on React.JS
+# HumanID Application on React.JS
 
 ## Installation and Startup
 ```
