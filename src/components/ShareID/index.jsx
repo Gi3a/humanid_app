@@ -228,9 +228,7 @@ const ShareID = () => {
                         })
                     }
                 }
-                else {
-                    navigate('/error');
-                }
+
             } catch (error) {
                 // Handle error here
                 console.log(error);

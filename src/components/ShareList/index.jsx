@@ -10,10 +10,15 @@ import { setLoad } from '../../store/slices/loadSlice';
 
 import styles from './ShareList.module.scss';
 
+
+import Card from '@mui/material/Card';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
+import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { viewDate } from '../../utils/date';
 
 import { Div } from '../UI/Div';
 import { Submit } from '../UI/Submit';
@@ -78,17 +83,27 @@ const ShareList = () => {
 
     return (
         <Div className={styles.shareid}>
-
-            <h1>Shares (with whom I shared)</h1>
+            {shareList.length > 0 &&
+                <h1>🔗 Shares (with whom I shared)</h1>
+            }
             {shareList.map((item) => {
                 return (
-                    <Link to={`${process.env.REACT_APP_APP_URL}/${item[3]}/${item[2]}`} key={item[0]}>
-                        <p>id: {item[0]}</p>
-                        <p>human_id: {item[1]}</p>
-                        <p>shared_id: {item[2]}</p>
-                        <p>receiver: {item[3]}</p>
-                        <p>date_create: {item[5]}</p>
-                        <p>date_update: {item[6]}</p>
+                    <Link to={`${process.env.REACT_APP_APP_URL}/${item[3]}/${item[2]}`} key={item[0]} style={{ textDecoration: 'none', color: 'inherit' }}>
+
+                        <Card sx={{ maxWidth: 345, marginBottom: 2, padding: 3 }}>
+                            <CardContent>
+                                <Typography variant="h6" color="text.secondary">
+                                    Receiver: {item[3]}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Shared ID: {item[2]}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Date Create: {viewDate(new Date(item[5]))}
+                                </Typography>
+                                <Submit size="small">✏️ Edit</Submit>
+                            </CardContent>
+                        </Card>
                     </Link>
                 );
             })}

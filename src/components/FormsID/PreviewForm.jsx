@@ -97,7 +97,8 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
             privateKeyArmored = encrypted_private_key;
             publicKeyArmored = encrypted_public_key;
         } else {
-            const { privateKeyArmored: generatedPrivateKeyArmored, publicKeyArmored: generatedPublicKeyArmored } = await generateKeyPair(pinnedFaceEncodings, firstname + ' ' + lastname, email);
+            const { privateKeyArmored: generatedPrivateKeyArmored, publicKeyArmored: generatedPublicKeyArmored } =
+                await generateKeyPair(pinnedFaceEncodings, firstname + ' ' + lastname, email);
             privateKeyArmored = generatedPrivateKeyArmored;
             publicKeyArmored = generatedPublicKeyArmored;
             publicKey = generatePublicKey(email, phone);

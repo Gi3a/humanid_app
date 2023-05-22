@@ -10,9 +10,15 @@ import { setLoad } from '../../store/slices/loadSlice';
 
 import styles from './AccessesList.module.scss';
 
+import Card from '@mui/material/Card';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
+import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
+
+import { viewDate } from '../../utils/date';
+
 
 
 import { Div } from '../UI/Div';
@@ -81,20 +87,27 @@ const AccessesList = () => {
 
     return (
         <Div className={styles.shareid}>
-
-            <h1>Accesses ( who  shared with me)</h1>
+            {accessesList.length > 0 &&
+                <h1>🔓 Accesses (who  shared with me)</h1>
+            }
             {accessesList.map((item) => {
                 return (
-                    <Link to={`${process.env.REACT_APP_APP_URL}/access/${item[1]}`} key={item[0]}>
-                        <p>id: {item[0]}</p>
-                        <p>human_id: {item[1]}</p>
-                        <p>shared_id: {item[2]}</p>
-                        <p>receiver: {item[3]}</p>
-                        <p>date_create: {item[5]}</p>
-                        <p>date_update: {item[6]}</p>
+                    <Link to={`${process.env.REACT_APP_APP_URL}/access/${item[1]}`} key={item[0]} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Card sx={{ maxWidth: 345, marginBottom: 2, padding: 3 }}>
+                            <CardContent>
+                                <Typography variant="body2" color="text.secondary">
+                                    Human ID: {item[1]}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Date Create: {viewDate(new Date(item[5]))}
+                                </Typography>
+                                <Submit size="small">🔍 View</Submit>
+                            </CardContent>
+                        </Card>
                     </Link>
                 );
             })}
+
 
 
         </Div>
