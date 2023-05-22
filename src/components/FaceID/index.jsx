@@ -37,6 +37,7 @@ const FaceID = () => {
     const [isSent, setIsSent] = useState(false);
     const [intervalID, setIntervalID] = useState(0);
     const [isModelLoaded, setIsModelLoaded] = useState(false);
+    const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
     const [showMessage, setShowMessage] = useState('Get closer to the camera');
     const [isMultipleFacesDetected, setIsMultipleFacesDetected] = useState(false);
 
@@ -53,6 +54,14 @@ const FaceID = () => {
     };
 
     useEffect(() => {
+
+        const updateHeight = () => {
+            setViewportHeight(window.innerHeight);
+        };
+
+        window.addEventListener('resize', updateHeight);
+
+
         const loadModels = async () => {
             setIsModelLoaded(false);
             await Promise.all([
@@ -65,7 +74,17 @@ const FaceID = () => {
             setIsModelLoaded(true);
         };
         loadModels();
+
+
+        return () => {
+            window.removeEventListener('resize', updateHeight);
+        };
     }, []);
+
+    const faceIdStyles = {
+        height: `${viewportHeight}px`,
+        // ... Other styles you want to apply
+    };
 
 
     const handleVideoLoad = async () => {
@@ -291,7 +310,7 @@ const FaceID = () => {
         <Div>
             {(start && isModelLoaded) ?
                 <>
-                    <div className={styles.faceid}>
+                    <div className={styles.faceid} style={faceIdStyles}>
                         <Webcam
                             audio={false}
                             ref={webcamRef}
