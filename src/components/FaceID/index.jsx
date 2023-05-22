@@ -56,7 +56,7 @@ const FaceID = () => {
     useEffect(() => {
 
         const updateHeight = () => {
-            setViewportHeight(window.innerHeight * 2);
+            setViewportHeight(window.innerHeight);
         };
 
         window.addEventListener('resize', updateHeight);
