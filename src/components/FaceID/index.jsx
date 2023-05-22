@@ -82,8 +82,7 @@ const FaceID = () => {
     }, []);
 
     const faceIdStyles = {
-        height: `${viewportHeight}px`,
-        // ... Other styles you want to apply
+        height: `${viewportHeight}px !important`,
     };
 
 
