@@ -63,6 +63,15 @@
         right: 0;
         bottom: 0;
 
+        @media (max-width: 480px) {
+            canvas {
+                opacity: 0.8;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+
     }
 
     .message_active {
