@@ -55,11 +55,6 @@ const FaceID = () => {
 
     useEffect(() => {
 
-        const updateHeight = () => {
-            setViewportHeight(window.innerHeight);
-        };
-
-        window.addEventListener('resize', updateHeight);
 
 
         const loadModels = async () => {
@@ -74,16 +69,7 @@ const FaceID = () => {
             setIsModelLoaded(true);
         };
         loadModels();
-
-
-        return () => {
-            window.removeEventListener('resize', updateHeight);
-        };
     }, []);
-
-    const faceIdStyles = {
-        height: `${viewportHeight}px !important`,
-    };
 
 
     const handleVideoLoad = async () => {
@@ -309,7 +295,7 @@ const FaceID = () => {
         <Div>
             {(start && isModelLoaded) ?
                 <>
-                    <div className={styles.faceid} style={faceIdStyles}>
+                    <div className={styles.faceid}>
                         <Webcam
                             audio={false}
                             ref={webcamRef}
