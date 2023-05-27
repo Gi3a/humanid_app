@@ -5,12 +5,15 @@ import { useSelector } from 'react-redux';
 
 import Loader from '../UI/Loader';
 
+import Header from '../UI/Header';
+
 const Layout = () => {
 
     const loadSelector = useSelector((state) => state.load.loadState);
 
     return (
         <>
+            <Header />
             <main>
                 <Outlet />
             </main>

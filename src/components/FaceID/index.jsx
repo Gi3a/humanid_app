@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 import * as faceapi from 'face-api.js';
 
-import { setLoad } from '../../store/slices/loadSlice';
 import { setFace, setUser } from '../../store/slices/userSlice';
 
 import axios from 'axios';
@@ -55,12 +54,6 @@ const FaceID = () => {
     const [showMessage, setShowMessage] = useState('Get closer to the camera');
     const [isMultipleFacesDetected, setIsMultipleFacesDetected] = useState(false);
 
-
-    const handleLoading = () => {
-        console.log('loading...');
-        dispatch(setLoad());
-    }
-
     useEffect(() => {
         const loadModels = async () => {
             setIsModelLoaded(false);
@@ -87,6 +80,17 @@ const FaceID = () => {
                         .withFaceDescriptors()
                         .withAgeAndGender()
                         .withFaceExpressions();
+
+
+                    // Multiple faces detected, not proceeding further
+                    if (detections.length > 1) {
+                        setIsMultipleFacesDetected(true);
+                        setShowMessage('Multiple faces detected');
+                        return;
+                    }
+
+                    setIsMultipleFacesDetected(false);
+                    setShowMessage('');
 
                     // Canvas reflection
                     const resizedDetections = faceapi.resizeResults(detections, VIDEO_CONSTRAINTS);
@@ -135,15 +139,6 @@ const FaceID = () => {
         const expressions = detection.expressions;
         const detection_score = detection.alignedRect._score;
 
-        // More than 1 face
-        if (resizedDetections.length > 1) {
-            setIsMultipleFacesDetected(true);
-            setShowMessage('Multiple faces detected');
-        } else {
-            setIsMultipleFacesDetected(false);
-            setShowMessage('');
-        }
-
         // Validation for expression
         if (detection_score > 0.7) {
             if (verificationStepRef.current === 1) {
@@ -185,7 +180,7 @@ const FaceID = () => {
         const result = await Swal.fire({
             title: 'Enter your PIN',
             input: 'text',
-            inputLabel: 'PIN',
+            inputLabel: '',
             inputPlaceholder: 'Enter your PIN',
             inputAttributes: {
                 maxlength: 100,
@@ -304,26 +299,27 @@ const FaceID = () => {
 
     return (
         <Div>
-            {(start && isModelLoaded) ?
-                <>
-                    <div className={styles.faceid}>
-                        <Webcam
-                            audio={false}
-                            ref={webcamRef}
-                            screenshotFormat="image/jpeg"
-                            videoConstraints={VIDEO_CONSTRAINTS}
-                            onUserMedia={handleVideoLoad}
-                        />
-                        <canvas ref={canvasRef} />
-                        <FaceIDMessage showMessage={showMessage} isMultipleFacesDetected={isMultipleFacesDetected} />
-                    </div>
-                </>
-                :
-                <>
-                    <h2>Face Identification</h2>
-                    <p>Face identification is the process of verifying a person's identity based on the analysis and comparison of images.</p>
-                    <Submit onClick={handleStart}>Start</Submit>
-                </>
+            {
+                (start && isModelLoaded) ?
+                    <>
+                        <div className={styles.faceid}>
+                            <Webcam
+                                audio={false}
+                                ref={webcamRef}
+                                screenshotFormat="image/jpeg"
+                                videoConstraints={VIDEO_CONSTRAINTS}
+                                onUserMedia={handleVideoLoad}
+                            />
+                            <canvas ref={canvasRef} />
+                            <FaceIDMessage showMessage={showMessage} isMultipleFacesDetected={isMultipleFacesDetected} />
+                        </div>
+                    </>
+                    :
+                    <>
+                        <h2>Face Identification</h2>
+                        <p>Face identification is the process of verifying a person's identity based on the analysis and comparison of images.</p>
+                        <Submit onClick={handleStart}>Start</Submit>
+                    </>
             }
         </Div>
     )

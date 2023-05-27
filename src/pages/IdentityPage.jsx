@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { Typography } from '@mui/material';
 import { useTitle } from '../hooks/use-title';
 
 import FaceID from '../components/FaceID'
@@ -12,7 +11,6 @@ const IdentyPage = () => {
 
     return (
         <Page>
-            <Typography component='h1' variant='5'>🌐 HumanID</Typography>
             <FaceID />
         </Page>
     )
