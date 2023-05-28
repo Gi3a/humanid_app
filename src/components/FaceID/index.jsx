@@ -71,10 +71,12 @@ const FaceID = () => {
 
 
     const handleVideoLoad = async () => {
-        faceapi.matchDimensions(canvasRef.current, VIDEO_CONSTRAINTS);
         if (!isSent) {
             const newIntervalID = setInterval(async () => {
-                if (webcamRef.current && webcamRef.current.video) {
+                if (canvasRef.current && webcamRef.current && webcamRef.current.video) {
+
+                    faceapi.matchDimensions(canvasRef.current, VIDEO_CONSTRAINTS);
+
                     const detections = await faceapi.detectAllFaces(webcamRef.current.video, FACE_DETECTION_OPTIONS)
                         .withFaceLandmarks()
                         .withFaceDescriptors()
@@ -299,29 +301,32 @@ const FaceID = () => {
 
     return (
         <Div>
-            {
-                (start && isModelLoaded) ?
+
+            <h2>Face Identification</h2>
+            <div className={styles.faceid}>
+                <Webcam
+                    audio={false}
+                    ref={webcamRef}
+                    screenshotFormat="image/jpeg"
+                    videoConstraints={VIDEO_CONSTRAINTS}
+                    onUserMedia={handleVideoLoad}
+                    className={start ? styles.webcamActive : styles.webcamInactive}
+                />
+                {start && isModelLoaded &&
                     <>
-                        <div className={styles.faceid}>
-                            <Webcam
-                                audio={false}
-                                ref={webcamRef}
-                                screenshotFormat="image/jpeg"
-                                videoConstraints={VIDEO_CONSTRAINTS}
-                                onUserMedia={handleVideoLoad}
-                            />
-                            <canvas ref={canvasRef} />
-                            <FaceIDMessage showMessage={showMessage} isMultipleFacesDetected={isMultipleFacesDetected} />
-                        </div>
+                        <canvas ref={canvasRef} />
+                        <FaceIDMessage showMessage={showMessage} isMultipleFacesDetected={isMultipleFacesDetected}
+                        />
                     </>
-                    :
-                    <>
-                        <h2>Face Identification</h2>
-                        <p>Face identification is the process of verifying a person's identity based on the analysis and comparison of images.</p>
-                        <Submit onClick={handleStart}>Start</Submit>
-                    </>
+                }
+            </div>
+            {!start &&
+                <>
+                    <p>Face identification is the process of verifying a person's identity based on the analysis and comparison of images.</p>
+                    <Submit onClick={handleStart}>Start</Submit>
+                </>
             }
-        </Div>
+        </Div >
     )
 }
 

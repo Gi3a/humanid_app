@@ -4,8 +4,9 @@ import { Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import Loader from '../UI/Loader';
-
 import Header from '../UI/Header';
+
+import styles from './Layout.module.scss'
 
 const Layout = () => {
 
@@ -14,7 +15,7 @@ const Layout = () => {
     return (
         <>
             <Header />
-            <main>
+            <main className={styles.main}>
                 <Outlet />
             </main>
             {loadSelector && <Loader />}

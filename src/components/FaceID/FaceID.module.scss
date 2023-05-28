@@ -1,11 +1,27 @@
+.faceid_init {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    p {
+        margin-top: 30px;
+    }
+
+    video {
+        display: flex;
+        height: 240px;
+        width: 320px;
+        border-radius: 100%;
+    }
+}
+
 .faceid {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-
-    transition: 0.3s all;
     overflow: hidden;
 
     cursor: pointer;
@@ -16,6 +32,8 @@
 
     max-height: 480px;
     max-width: 640px;
+
+    transition: 0.3s all !important;
 
     .faceid_message {
         display: none;
@@ -42,6 +60,7 @@
         background-color: rgba(0, 0, 0, 0.8);
     }
 
+
     video,
     canvas {
         position: absolute;
@@ -57,7 +76,15 @@
         top: 0;
         left: 0;
         z-index: 1;
+
+        transition: 0.3s all !important;
     }
+
+    .webcamInactive {
+        border-radius: 100%;
+    }
+
+
 
     canvas {
         display: flex;
@@ -81,6 +108,7 @@
     .message_active {
         display: flex !important;
     }
+
 
     h2 {
         margin: 10px 15px;
