@@ -90,7 +90,7 @@ const FaceID = () => {
                     }
 
                     setIsMultipleFacesDetected(false);
-                    setShowMessage('Wait ⌛');
+                    setShowMessage('Freeze 🧊');
 
                     // Canvas reflection
                     const resizedDetections = faceapi.resizeResults(detections, VIDEO_CONSTRAINTS);
