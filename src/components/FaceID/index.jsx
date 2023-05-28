@@ -26,7 +26,7 @@ const VIDEO_CONSTRAINTS = {
     facingMode: 'user'
 };
 const FACE_DETECTION_OPTIONS = new faceapi.TinyFaceDetectorOptions();
-const CAMERA_INTERVAL = 100;
+const CAMERA_INTERVAL = 1000;
 
 // Subcomponents
 const FaceIDMessage = ({ showMessage, isMultipleFacesDetected }) => (
@@ -61,7 +61,6 @@ const FaceID = () => {
                 faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_PATH),
                 faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_PATH),
                 faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_PATH),
-                faceapi.nets.ageGenderNet.loadFromUri(MODEL_PATH),
                 faceapi.nets.faceExpressionNet.loadFromUri(MODEL_PATH),
             ]);
             setIsModelLoaded(true);
@@ -80,7 +79,6 @@ const FaceID = () => {
                     const detections = await faceapi.detectAllFaces(webcamRef.current.video, FACE_DETECTION_OPTIONS)
                         .withFaceLandmarks()
                         .withFaceDescriptors()
-                        .withAgeAndGender()
                         .withFaceExpressions();
 
 
@@ -108,26 +106,13 @@ const FaceID = () => {
                     // For each frame
                     if (!isSent) {
                         resizedDetections.forEach((detection) => {
-
-                            const { age, gender, genderProbability } = detection;
                             const face = verificationFace(detection, resizedDetections);
-
 
                             if (face) {
                                 stopCamera();
                                 setFaceImg(face);
                                 handleSend(face);
                             }
-
-                            // Draw age and gender
-                            new faceapi.draw.DrawTextField(
-                                [
-                                    `${Math.round(age)} years`,
-                                    `${gender} (${Math.round(genderProbability * 100)}%)`,
-                                ],
-                                detection.detection.box.bottomRight
-                            ).draw(canvasRef.current);
-
                         });
                     }
                 }
@@ -301,8 +286,6 @@ const FaceID = () => {
 
     return (
         <Div>
-
-            <h2>Face Identification</h2>
             <div className={styles.faceid}>
                 <Webcam
                     audio={false}
