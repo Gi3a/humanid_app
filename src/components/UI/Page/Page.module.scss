@@ -5,13 +5,19 @@
     align-items: center;
 
     background-color: #eff2ff;
+    border-radius: 10px;
 
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+
+    margin-top: 2%;
+    margin-bottom: 2%;
+    padding: 3%;
 
     overflow: hidden;
 
-    padding: 20px 0;
-
-    min-height: 100vh;
+    height: 100% !important;
 
     &>h1,
     h2 {

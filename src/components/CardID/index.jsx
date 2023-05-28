@@ -14,6 +14,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Div } from '../UI/Div';
 import { Input } from '../UI/Input';
 import { Submit } from '../UI/Submit';
+import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
 const CardID = () => {
 
@@ -39,6 +40,13 @@ const CardID = () => {
         dispatch(setLoad());
     }
 
+    const showContract = () => {
+        linkRef.current.select();
+        document.execCommand('copy');
+        const url = `https://mumbai.polygonscan.com/address/0x114005863CBeb472B9F994829695A97386A8a7e7#readContract`;
+        window.open(url, '_blank');
+    }
+
     const {
         public_key,
         firstname
@@ -56,8 +64,11 @@ const CardID = () => {
                 value={share_id}
                 readOnly
             />
-            <Submit onClick={copyLink}>🪞 Copy</Submit>
-            <Submit onClick={() => navigate('/panel')}>⬅️ Back</Submit>
+            <ButtonGroup>
+                <Submit onClick={() => navigate('/panel')}>⬅️ Back</Submit>
+                <Submit onClick={copyLink}>🪞 Copy</Submit>
+                <Submit onClick={showContract}>💾 SmartContract</Submit>
+            </ButtonGroup>
         </Div>
     )
 }

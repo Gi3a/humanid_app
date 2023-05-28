@@ -11,6 +11,7 @@ import Layout from '../../components/Layout';
 
 import IdPage from '../../pages/IdPage';
 import DevPage from '../../pages/DevPage';
+import ListPage from '../../pages/ListPage';
 import ErrorPage from '../../pages/ErrorPage';
 import PanelPage from '../../pages/PanelPage';
 import AccessPage from '../../pages/AccessPage';
@@ -35,17 +36,6 @@ export const AppRouter = () => {
             navigate('/settings');
         if (url === '/' && (token && face_encodings))
             navigate('/panel')
-        // if (token && url ==)
-        // if (public_key && token && face_encodings)
-        //     navigate('/settings');
-        // if (!public_key)
-        //     navigate('/settings');
-        // if (token)
-        //     navigate('/panel');
-        // if (face_encodings)
-        //     navigate('/settings');
-        // else
-        //     navigate('/');
     }, [url, token, face_encodings, public_key, navigate]);
 
     return (
@@ -63,6 +53,7 @@ export const AppRouter = () => {
                     <Route path='/panel' element={<PanelPage />} />
                     <Route path='/:user_name/:user_id' element={<SharePage />} />
                     <Route path='/access/:user_id' element={<AccessPage />} />
+                    <Route path='/list/:category' element={<ListPage />} />
                 </Route>
             </Route>
         </Routes>

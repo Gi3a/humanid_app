@@ -11,6 +11,7 @@ import { useAuth } from '../../hooks/use-auth';
 import { setLoad } from '../../store/slices/loadSlice';
 import { unsetUser } from '../../store/slices/userSlice';
 
+import Avatar from '@mui/material/Avatar';
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 
 import styles from './PanelID.module.scss'
@@ -107,49 +108,55 @@ const PanelID = () => {
 
     return (
         <Div className={styles.panelid}>
-            <img src={face} alt="Face" />
-            <TableContainer>
-                <Table>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>Name:</TableCell>
-                            <TableCell>{firstname + ' ' + lastname}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Date of Birth:</TableCell>
-                            <TableCell>{viewDate(new Date(date_of_birth))}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>ID Number:</TableCell>
-                            <TableCell>{id_number}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Nationality:</TableCell>
-                            <TableCell>{nationality}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Date of Issue:</TableCell>
-                            <TableCell>{viewDate(new Date(date_of_issue))}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Date of Expiry:</TableCell>
-                            <TableCell>{viewDate(new Date(date_of_expiry))}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Email:</TableCell>
-                            <TableCell>{email}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Phone:</TableCell>
-                            <TableCell>{phone}</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <ButtonGroup>
+                <Submit onClick={() => navigate('/list/acceses')}>🔓 Accesses</Submit>
+                <Submit onClick={() => navigate('/id')}>🪪 ID</Submit>
+                <Submit onClick={() => navigate('/list/shares')}>🔗 Shares</Submit>
+            </ButtonGroup>
+            <div className={styles.profileid}>
+                <Avatar alt="Face ID" src={face} sx={{ width: 180, height: 180 }} />
+                <TableContainer>
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Name:</TableCell>
+                                <TableCell>{firstname + ' ' + lastname}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Date of Birth:</TableCell>
+                                <TableCell>{viewDate(new Date(date_of_birth))}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>ID Number:</TableCell>
+                                <TableCell>{id_number}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Nationality:</TableCell>
+                                <TableCell>{nationality}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Date of Issue:</TableCell>
+                                <TableCell>{viewDate(new Date(date_of_issue))}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Date of Expiry:</TableCell>
+                                <TableCell>{viewDate(new Date(date_of_expiry))}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Email:</TableCell>
+                                <TableCell>{email}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Phone:</TableCell>
+                                <TableCell>{phone}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
             <ButtonGroup>
                 <Submit onClick={() => dispatch(unsetUser())}>🚪 Exit</Submit>
                 <Submit onClick={() => navigate('/settings')}>⚙️ Settings</Submit>
-                <Submit onClick={() => navigate('/id')}>🪪 ID</Submit>
                 <Submit onClick={handleSubmit}>💀 Kill</Submit>
             </ButtonGroup>
 

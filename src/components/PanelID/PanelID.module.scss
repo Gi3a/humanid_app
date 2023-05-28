@@ -1,3 +1,19 @@
 .panelid {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+
     width: 80%;
+
+    // img {
+    //     width: 50%;
+    //     border-radius: 10px;
+    // }
+
+    .profileid {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+    }
 }

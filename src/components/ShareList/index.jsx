@@ -83,32 +83,34 @@ const ShareList = () => {
 
     return (
         <Div className={styles.shareid}>
+
+            <h1>🔗 Shares (with whom I shared)</h1>
             {shareList.length > 0 &&
-                <h1>🔗 Shares (with whom I shared)</h1>
+
+                shareList.map((item) => {
+                    return (
+                        <Link to={`${process.env.REACT_APP_APP_URL}/${item[3]}/${item[2]}`} key={item[0]} style={{ textDecoration: 'none', color: 'inherit' }}>
+
+                            <Card sx={{ maxWidth: 345, marginBottom: 2, padding: 3 }}>
+                                <CardContent>
+                                    <Typography variant="h6" color="text.secondary">
+                                        Receiver: {item[3]}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Shared ID: {item[2]}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Date Create: {viewDate(new Date(item[5]))}
+                                    </Typography>
+                                    <Submit size="small">✏️ Edit</Submit>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    );
+                })
+
             }
-            {shareList.map((item) => {
-                return (
-                    <Link to={`${process.env.REACT_APP_APP_URL}/${item[3]}/${item[2]}`} key={item[0]} style={{ textDecoration: 'none', color: 'inherit' }}>
-
-                        <Card sx={{ maxWidth: 345, marginBottom: 2, padding: 3 }}>
-                            <CardContent>
-                                <Typography variant="h6" color="text.secondary">
-                                    Receiver: {item[3]}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Shared ID: {item[2]}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Date Create: {viewDate(new Date(item[5]))}
-                                </Typography>
-                                <Submit size="small">✏️ Edit</Submit>
-                            </CardContent>
-                        </Card>
-                    </Link>
-                );
-            })}
-
-
+            <Submit onClick={() => navigate('/panel')}>⬅️ Back</Submit>
         </Div>
     )
 }

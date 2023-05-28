@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from "react-redux";
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/use-auth';
 import { setPersonal } from '../../store/slices/userSlice';
@@ -12,7 +13,7 @@ import { Form } from '../UI/Form';
 import { Input } from '../UI/Input';
 import { Submit } from '../UI/Submit';
 import { formatDate } from '../../utils/date';
-
+import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
 
 const schema = yup.object().shape({
@@ -31,7 +32,9 @@ const schema = yup.object().shape({
 
 export const PersonalForm = ({ handleNext }) => {
 
-    const { firstname, lastname, date_of_birth } = useAuth();
+    const navigate = useNavigate();
+
+    const { firstname, lastname, date_of_birth, token } = useAuth();
 
     const dispatch = useDispatch();
 
@@ -86,7 +89,12 @@ export const PersonalForm = ({ handleNext }) => {
                 error={!!errors.date_of_birth}
                 helperText={errors?.date_of_birth?.message}
             />
-            <Submit>Next ➡️</Submit>
+            <ButtonGroup>
+                {token &&
+                    <Submit onClick={() => navigate('/panel')}>⬅️ Back</Submit>
+                }
+                <Submit>Next ➡️</Submit>
+            </ButtonGroup>
         </Form>
     )
 }

@@ -87,29 +87,29 @@ const AccessesList = () => {
 
     return (
         <Div className={styles.shareid}>
+
+            <h1>🔓 Accesses (who  shared with me)</h1>
+
             {accessesList.length > 0 &&
-                <h1>🔓 Accesses (who  shared with me)</h1>
+                accessesList.map((item) => {
+                    return (
+                        <Link to={`${process.env.REACT_APP_APP_URL}/access/${item[1]}`} key={item[0]} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <Card sx={{ maxWidth: 345, marginBottom: 2, padding: 3 }}>
+                                <CardContent>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Human ID: {item[1]}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Date Create: {viewDate(new Date(item[5]))}
+                                    </Typography>
+                                    <Submit size="small">🔍 View</Submit>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    );
+                })
             }
-            {accessesList.map((item) => {
-                return (
-                    <Link to={`${process.env.REACT_APP_APP_URL}/access/${item[1]}`} key={item[0]} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <Card sx={{ maxWidth: 345, marginBottom: 2, padding: 3 }}>
-                            <CardContent>
-                                <Typography variant="body2" color="text.secondary">
-                                    Human ID: {item[1]}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Date Create: {viewDate(new Date(item[5]))}
-                                </Typography>
-                                <Submit size="small">🔍 View</Submit>
-                            </CardContent>
-                        </Card>
-                    </Link>
-                );
-            })}
-
-
-
+            <Submit onClick={() => navigate('/panel')}>⬅️ Back</Submit>
         </Div>
     )
 }
