@@ -268,7 +268,7 @@ const FaceID = () => {
     const capture = useCallback(() => {
         const face = webcamRef.current.getScreenshot();
         setFaceImg(face);
-        setShowMessage('Wait ⌛');
+        setShowMessage('Getting response ⌛');
         return face
     }, [webcamRef]);
 
