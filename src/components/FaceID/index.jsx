@@ -90,7 +90,7 @@ const FaceID = () => {
                     }
 
                     setIsMultipleFacesDetected(false);
-                    setShowMessage('');
+                    setShowMessage('Wait ⌛');
 
                     // Canvas reflection
                     const resizedDetections = faceapi.resizeResults(detections, VIDEO_CONSTRAINTS);
@@ -125,7 +125,7 @@ const FaceID = () => {
     const verificationFace = (detection, resizedDetections) => {
         const expressions = detection.expressions;
         const detection_score = detection.alignedRect._score;
-
+        setShowMessage('Freeze 🧊');
         // Validation for expression
         if (detection_score > 0.7) {
             if (verificationStepRef.current === 1) {
@@ -137,6 +137,7 @@ const FaceID = () => {
                     setShowMessage('Smile please 🙂');
                 }
             } else if (verificationStepRef.current === 2) {
+                setShowMessage('Freeze 🧊');
                 if (expressions.neutral > 0.7) {
                     return capture();
                 } else {
@@ -144,6 +145,7 @@ const FaceID = () => {
                 }
             }
         } else {
+            setShowMessage('Wait ⌛');
             verificationStepRef.current = 1;
         }
     };
@@ -266,7 +268,7 @@ const FaceID = () => {
     const capture = useCallback(() => {
         const face = webcamRef.current.getScreenshot();
         setFaceImg(face);
-        setShowMessage('Emotion test passed succesfully! Data is sending...');
+        setShowMessage('Wait ⌛');
         return face
     }, [webcamRef]);
 
@@ -298,8 +300,7 @@ const FaceID = () => {
                 {start && isModelLoaded &&
                     <>
                         <canvas ref={canvasRef} />
-                        <FaceIDMessage showMessage={showMessage} isMultipleFacesDetected={isMultipleFacesDetected}
-                        />
+                        <FaceIDMessage showMessage={showMessage} isMultipleFacesDetected={isMultipleFacesDetected} />
                     </>
                 }
             </div>
