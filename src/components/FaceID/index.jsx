@@ -51,7 +51,7 @@ const FaceID = () => {
     const [isSent, setIsSent] = useState(false);
     const [intervalID, setIntervalID] = useState(0);
     const [isModelLoaded, setIsModelLoaded] = useState(false);
-    const [showMessage, setShowMessage] = useState('Get closer to the camera');
+    const [showMessage, setShowMessage] = useState('Get closer to the camera 🔎');
     const [isMultipleFacesDetected, setIsMultipleFacesDetected] = useState(false);
 
     useEffect(() => {

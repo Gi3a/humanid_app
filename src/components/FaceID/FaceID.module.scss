@@ -22,8 +22,6 @@
     align-items: center;
     justify-content: center;
 
-    overflow: hidden;
-
     cursor: pointer;
     position: relative;
 
@@ -80,8 +78,15 @@
         transition: 0.3s all !important;
     }
 
+
     canvas {
-        max-height: 900px !important;
+
+        @media (min-width: 150px) and (max-width: 480px) {
+            & {
+                border: 5px solid red;
+                height: calc(2 * 480px) !important;
+            }
+        }
     }
 
     .webcamInactive {
