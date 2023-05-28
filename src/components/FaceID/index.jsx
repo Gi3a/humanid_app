@@ -145,7 +145,6 @@ const FaceID = () => {
                 }
             }
         } else {
-            setShowMessage('Wait ⌛');
             verificationStepRef.current = 1;
         }
     };
