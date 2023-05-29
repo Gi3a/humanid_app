@@ -67,7 +67,7 @@ const CardID = () => {
             <ButtonGroup>
                 <Submit onClick={() => navigate('/panel')}>⬅️ Back</Submit>
                 <Submit onClick={copyLink}>🪞 Copy</Submit>
-                <Submit onClick={showContract}>💾 SmartContract</Submit>
+                <Submit onClick={showContract}>💾 Contract</Submit>
             </ButtonGroup>
         </Div>
     )

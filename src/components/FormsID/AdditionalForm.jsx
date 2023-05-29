@@ -14,6 +14,8 @@ import { Input } from '../UI/Input';
 import { Submit } from '../UI/Submit';
 import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
+import { FcUndo, FcAdvance } from "react-icons/fc";
+
 const normalizePhoneNumber = (value) => {
     const phone = parsePhoneNumberFromString(value)
     if (!phone) {
@@ -108,8 +110,8 @@ export const AdditionalForm = ({ handleNext, handleBack }) => {
                 />
             }
             <ButtonGroup>
-                <Submit onClick={handleBack}>⬅️ Back</Submit>
-                <Submit onClick={handleSubmit(onSubmit)}>Next ➡️</Submit>
+                <Submit onClick={handleBack}><FcUndo /> Back</Submit>
+                <Submit onClick={handleSubmit(onSubmit)}>Next <FcAdvance /></Submit>
             </ButtonGroup>
         </Form>
     )

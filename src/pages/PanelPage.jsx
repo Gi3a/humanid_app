@@ -7,6 +7,8 @@ import { useTitle } from '../hooks/use-title';
 import { Page } from '../components/UI/Page';
 import PanelID from '../components/PanelID';
 
+import { FcTemplate } from "react-icons/fc";
+
 
 const PanelPage = () => {
 
@@ -14,7 +16,7 @@ const PanelPage = () => {
 
     return (
         <Page>
-            <Typography component='h1' variant='5'>🪟 Panel</Typography>
+            <Typography component='h1' variant='5'><FcTemplate /> Panel</Typography>
             <PanelID />
         </Page>
     )

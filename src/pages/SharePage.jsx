@@ -7,6 +7,8 @@ import { useTitle } from '../hooks/use-title';
 import { Page } from '../components/UI/Page';
 import ShareID from '../components/ShareID';
 
+import { FcParallelTasks } from "react-icons/fc";
+
 
 const SharePage = () => {
 
@@ -14,7 +16,7 @@ const SharePage = () => {
 
     return (
         <Page>
-            <Typography component='h1' variant='5'>🔗 Share</Typography>
+            <Typography component='h1' variant='5'><FcParallelTasks /> Share</Typography>
             <ShareID />
         </Page>
     )

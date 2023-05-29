@@ -1,0 +1,11 @@
+.shareid {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    @media (min-width: 150px) and (max-width: 480px) {
+        & {
+            width: 90%;
+        }
+    }
+}

@@ -15,6 +15,7 @@ import { Submit } from '../UI/Submit';
 import { formatDate } from '../../utils/date';
 import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
+import { FcUndo, FcAdvance } from "react-icons/fc";
 
 const schema = yup.object().shape({
     firstname: yup
@@ -91,9 +92,9 @@ export const PersonalForm = ({ handleNext }) => {
             />
             <ButtonGroup>
                 {token &&
-                    <Submit onClick={() => navigate('/panel')}>⬅️ Back</Submit>
+                    <Submit onClick={() => navigate('/panel')}><FcUndo /> Back</Submit>
                 }
-                <Submit>Next ➡️</Submit>
+                <Submit>Next <FcAdvance /></Submit>
             </ButtonGroup>
         </Form>
     )

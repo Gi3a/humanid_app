@@ -14,6 +14,7 @@ import { Submit } from '../UI/Submit';
 import { ButtonGroup } from '../UI/Group/ButtonGroup';
 import { formatDate } from '../../utils/date';
 
+import { FcUndo, FcAdvance } from "react-icons/fc";
 
 const schema = yup.object().shape({
     id_number: yup
@@ -100,8 +101,8 @@ export const PassportForm = ({ handleNext, handleBack }) => {
                 helperText={errors?.date_of_expiry?.message}
             />
             <ButtonGroup>
-                <Submit onClick={handleBack}>⬅️ Back</Submit>
-                <Submit onClick={handleSubmit(onSubmit)}>Next ➡️</Submit>
+                <Submit onClick={handleBack}><FcUndo /> Back</Submit>
+                <Submit onClick={handleSubmit(onSubmit)}>Next <FcAdvance /></Submit>
             </ButtonGroup>
         </Form>
     )

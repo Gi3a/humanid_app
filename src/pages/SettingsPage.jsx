@@ -10,6 +10,7 @@ import { PassportForm } from '../components/FormsID/PassportForm';
 import { AdditionalForm } from '../components/FormsID/AdditionalForm';
 import { PreviewForm } from '../components/FormsID/PreviewForm';
 
+import { FcInspection, FcUndo } from "react-icons/fc";
 
 const steps = ['Personal Data', 'Passport Data', 'Additional Data', 'Preview Data'];
 
@@ -59,7 +60,7 @@ const SettingsPage = () => {
 
     return (
         <Page>
-            <Typography component='h1' variant='5'>⚙️ Settings</Typography>
+            <Typography component='h1' variant='5'><FcInspection /> Settings</Typography>
 
             <NonLinearStepper activeStep={activeStep} handleStep={handleStep} />
             {activeStep === 0 && <PersonalForm handleNext={handleStep(1)} />}
@@ -69,7 +70,7 @@ const SettingsPage = () => {
             {activeStep === 4 && (
                 <div>
                     <Typography variant='subtitle1' gutterBottom>Error: Please complete all required fields before submitting</Typography>
-                    <button onClick={handleBack}>Back</button>
+                    <button onClick={handleBack}><FcUndo />Back</button>
                 </div>
             )}
             {isFormError && setActiveStep(steps.length - 1)}

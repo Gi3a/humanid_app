@@ -21,6 +21,8 @@ import { Popup } from '../UI/Popup';
 import { Submit } from '../UI/Submit';
 import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
+import { FcInspection, FcParallelTasks, FcSupport, FcGoodDecision } from "react-icons/fc";
+
 
 const PanelID = () => {
 
@@ -109,9 +111,9 @@ const PanelID = () => {
     return (
         <Div className={styles.panelid}>
             <ButtonGroup>
-                <Submit onClick={() => navigate('/list/acceses')}>🔓 Accesses</Submit>
-                <Submit onClick={() => navigate('/id')}>🪪 ID</Submit>
-                <Submit onClick={() => navigate('/list/shares')}>🔗 Shares</Submit>
+                <Submit onClick={() => navigate('/list/acceses')}><FcInspection /> Access</Submit>
+                <Submit onClick={() => navigate('/id')}><FcGoodDecision /> Card</Submit>
+                <Submit onClick={() => navigate('/list/shares')}><FcParallelTasks /> Share</Submit>
             </ButtonGroup>
             <div className={styles.profileid}>
                 <Avatar alt="Face ID" src={face} sx={{ width: 180, height: 180 }} />
@@ -156,7 +158,7 @@ const PanelID = () => {
             </div>
             <ButtonGroup>
                 <Submit onClick={() => dispatch(unsetUser())}>🚪 Exit</Submit>
-                <Submit onClick={() => navigate('/settings')}>⚙️ Settings</Submit>
+                <Submit onClick={() => navigate('/settings')}><FcSupport /> Edit</Submit>
                 <Submit onClick={handleSubmit}>💀 Kill</Submit>
             </ButtonGroup>
 

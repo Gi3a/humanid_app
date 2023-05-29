@@ -27,6 +27,7 @@ import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
 import { encryptData, generatePinnedFaceEncodings, decryptData } from '../../utils/crypto';
 
+import { FcInspection } from "react-icons/fc";
 
 const AccessesList = () => {
 
@@ -86,9 +87,9 @@ const AccessesList = () => {
     }, [user_id, token]);
 
     return (
-        <Div className={styles.shareid}>
+        <Div className={styles.accessid}>
 
-            <h1>🔓 Accesses (who  shared with me)</h1>
+            <h1><FcInspection /> Accesses (who  shared with me)</h1>
 
             {accessesList.length > 0 &&
                 accessesList.map((item) => {

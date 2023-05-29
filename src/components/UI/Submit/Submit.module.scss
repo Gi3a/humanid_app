@@ -1,7 +1,19 @@
 .submit {
     display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
     align-items: center;
+    padding: 15px 0 !important;
 
-    padding: 13px !important;
-    margin-top: 25px !important;
+    border-radius: 4px !important;
+
+    background-color: #fff !important;
+    color: #262626 !important;
+
+
+    svg {
+        margin-left: 5px;
+        margin-right: 5px;
+        font-size: 20px;
+    }
 }

@@ -25,6 +25,8 @@ import {
     encryptData
 } from '../../utils/crypto';
 
+import { FcUndo, FcApproval } from "react-icons/fc";
+
 
 export const PreviewForm = ({ handleNext, handleBack }) => {
 
@@ -228,8 +230,8 @@ export const PreviewForm = ({ handleNext, handleBack }) => {
                 </Table>
             </TableContainer>
             <ButtonGroup>
-                <Submit onClick={handleBack}>⬅️ Back</Submit>
-                <Submit onClick={handleSubmit}>✅ Save</Submit>
+                <Submit onClick={handleBack}><FcUndo /> Back</Submit>
+                <Submit onClick={handleSubmit}><FcApproval /> Save</Submit>
             </ButtonGroup>
 
             <Popup

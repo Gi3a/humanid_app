@@ -7,6 +7,7 @@ import { useTitle } from '../hooks/use-title';
 import { Page } from '../components/UI/Page';
 import AccessID from '../components/AccessID';
 
+import { FcInspection } from "react-icons/fc";
 
 const SharePage = () => {
 
@@ -14,7 +15,7 @@ const SharePage = () => {
 
     return (
         <Page>
-            <Typography component='h1' variant='5'>🔓 Access</Typography>
+            <Typography component='h1' variant='5'><FcInspection /> Access</Typography>
             <AccessID />
         </Page>
     )

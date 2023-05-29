@@ -26,6 +26,7 @@ import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
 import { encryptData, generatePinnedFaceEncodings, decryptData } from '../../utils/crypto';
 
+import { FcParallelTasks } from "react-icons/fc";
 
 const ShareList = () => {
 
@@ -84,7 +85,7 @@ const ShareList = () => {
     return (
         <Div className={styles.shareid}>
 
-            <h1>🔗 Shares (with whom I shared)</h1>
+            <h1><FcParallelTasks /> Shares (with whom I shared)</h1>
             {shareList.length > 0 &&
 
                 shareList.map((item) => {
