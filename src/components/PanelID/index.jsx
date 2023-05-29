@@ -21,7 +21,7 @@ import { Popup } from '../UI/Popup';
 import { Submit } from '../UI/Submit';
 import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
-import { FcInspection, FcParallelTasks, FcSupport, FcGoodDecision } from "react-icons/fc";
+import { FcInspection, FcParallelTasks, FcSupport, FcContacts } from "react-icons/fc";
 
 
 const PanelID = () => {
@@ -112,7 +112,7 @@ const PanelID = () => {
         <Div className={styles.panelid}>
             <ButtonGroup>
                 <Submit onClick={() => navigate('/list/acceses')}><FcInspection /> Access</Submit>
-                <Submit onClick={() => navigate('/id')}><FcGoodDecision /> Card</Submit>
+                <Submit onClick={() => navigate('/id')}><FcContacts /> Card</Submit>
                 <Submit onClick={() => navigate('/list/shares')}><FcParallelTasks /> Share</Submit>
             </ButtonGroup>
             <div className={styles.profileid}>

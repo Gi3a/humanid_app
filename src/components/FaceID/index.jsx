@@ -18,6 +18,8 @@ import { Submit } from '../UI/Submit';
 
 import { generatePinnedFaceEncodings, decryptData } from '../../utils/crypto';
 
+import { FcIntegratedWebcam } from "react-icons/fc";
+
 // Constants
 const MODEL_PATH = "/models";
 const VIDEO_CONSTRAINTS = {
@@ -306,7 +308,7 @@ const FaceID = () => {
             {!start &&
                 <>
                     <p>Face identification is the process of verifying a person's identity based on the analysis and comparison of images.</p>
-                    <Submit onClick={handleStart}>Start</Submit>
+                    <Submit onClick={handleStart}><FcIntegratedWebcam />Start</Submit>
                 </>
             }
         </Div >

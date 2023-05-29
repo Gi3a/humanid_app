@@ -28,6 +28,8 @@ import { ButtonGroup } from '../UI/Group/ButtonGroup';
 
 import { encryptData, generatePinnedFaceEncodings, decryptData } from '../../utils/crypto';
 
+import { FcUndo, FcApproval } from "react-icons/fc";
+
 
 const schema = yup.object().shape({
     receiver: yup
@@ -273,14 +275,14 @@ const ShareID = () => {
                         />
                     </FormGroup>
                     <ButtonGroup>
-                        <Submit onClick={() => navigate('/panel')}>⬅️ Back</Submit>
+                        <Submit onClick={() => navigate('/panel')}><FcUndo /> Back</Submit>
                         {!getData ?
                             <>
-                                <Submit>✅ Save</Submit>
+                                <Submit><FcApproval /> Save</Submit>
                             </>
                             :
                             <>
-                                <Submit>✅ Update</Submit>
+                                <Submit><FcApproval /> Update</Submit>
                                 <Submit onClick={handleBan}>⛔ Ban</Submit>
                             </>
                         }

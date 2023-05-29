@@ -8,10 +8,11 @@
     transition: 0.3s all !important;
     width: 65%;
 
-    max-height: 79vh;
+    max-height: 85vh;
 
     p {
         margin-top: 5%;
+        margin-bottom: 5%;
     }
 
     @media (min-width: 150px) and (max-width: 480px) {
