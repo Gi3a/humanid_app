@@ -4,12 +4,14 @@
     justify-content: center;
 
 
-    background-color: #34396a !important;
+    background-color: #1a1e2d !important;
     cursor: pointer !important;
     padding: 15px;
 
     width: 25%;
     margin: 10px;
+
+    transition: 0.3s all !important;
 
 
     @media (min-width: 150px) and (max-width: 800px) {
@@ -58,7 +60,7 @@
     }
 
     &:hover {
-        background-color: #131727 !important;
+        background-color: #34396a !important;
     }
 
     svg {
