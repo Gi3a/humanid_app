@@ -14,4 +14,11 @@
     flex-direction: column;
 
     margin-top: 70px;
+
+    @media (min-width: 150px) and (max-width: 800px) {
+        & {
+            margin-bottom: 80px;
+            margin-top: 0;
+        }
+    }
 }

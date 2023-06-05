@@ -77,13 +77,13 @@ const Header = () => {
                 }
             </AppBar>
             <Drawer anchor={drawerAnchor} open={isDrawerOpen} onClose={handleDrawerClose} className='menu'>
-                <div className='menuclose'>
-                    <IconButton onClick={handleDrawerClose}>
-                        {drawerAnchor === 'left' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    </IconButton>
-                </div>
-                <Divider />
                 <List sx={{ flexGrow: 1 }}>
+                    <div className='menuclose'>
+                        <IconButton onClick={handleDrawerClose}>
+                            {drawerAnchor === 'left' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                        </IconButton>
+                    </div>
+                    <Divider />
                     {(drawerContent === 'menu' ? menuItems : userItems).map(({ text, icon, path, action }) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton onClick={() => {
