@@ -1,0 +1,15 @@
+.settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 30px;
+    border-radius: 4px;
+    background-color: #1a1e2d;
+    transition: 0.3s all !important;
+}
+
+.MuiStepLabel-label {
+    color: #fff !important;
+    font-weight: bold !important;
+}

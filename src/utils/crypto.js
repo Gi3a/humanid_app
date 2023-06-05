@@ -4,15 +4,12 @@ import CryptoJS from 'crypto-js';
 import * as openpgp from 'openpgp';
 import { keccak256 } from 'js-sha3';
 
-
-// Генерирует PIN лицо
 export function generatePinnedFaceEncodings(face_encodings, pin) {
     const position = parseInt(pin) % face_encodings.toString().length;
     const saltedFaceEncodings = face_encodings.slice(0, position) + pin + face_encodings.slice(position);
     const hash = CryptoJS.SHA256(saltedFaceEncodings).toString();
     return hash;
 }
-
 
 export async function encryptData(data, publicKeysArmored) {
     if (!Array.isArray(publicKeysArmored)) {
@@ -30,7 +27,6 @@ export async function encryptData(data, publicKeysArmored) {
 
     return encrypted;
 }
-
 
 
 export async function decryptData(encryptedData, privateKeyArmored, passphrase) {
@@ -54,6 +50,7 @@ export async function decryptData(encryptedData, privateKeyArmored, passphrase) 
     return decrypted
 }
 
+
 export async function generateKeyPair(pinnedFaceEncodings, name, email) {
     const { privateKey, publicKey } = await openpgp.generateKey({
         type: "rsa",
@@ -73,4 +70,8 @@ export function generatePublicKey(email, phone) {
     const publicKey = '0x' + keccak256.array(publicKeyArray).slice(-20).map(byte => byte.toString(16).padStart(2, '0')).join('');
 
     return publicKey;
+}
+
+export function viewPublicKey(key) {
+    return (key.slice(0, 5) + "..." + key.slice(-4));
 }

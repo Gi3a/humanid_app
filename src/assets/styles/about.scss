@@ -1,0 +1,24 @@
+.about {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    @media (min-width: 150px) and (max-width: 800px) {
+        &>div {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100%;
+            border-radius: 4px !important;
+            overflow: hidden !important;
+
+            button {
+                border-radius: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+            }
+        }
+    }
+}

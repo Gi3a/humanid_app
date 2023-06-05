@@ -1,0 +1,16 @@
+div:where(.swal2-container) {
+    z-index: 9999 !important;
+}
+
+.div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+    font-weight: bold !important;
+}
+
+.swal2-modal {
+    background-color: #34396a !important;
+
+    h1,
+    h2 {
+        color: #fff !important;
+    }
+}

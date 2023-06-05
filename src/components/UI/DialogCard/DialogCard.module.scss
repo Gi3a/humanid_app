@@ -1,0 +1,47 @@
+.card {
+
+    display: flex;
+    flex-direction: column;
+
+
+    .carditem {
+        display: flex;
+        flex-direction: column;
+
+        margin-top: 10px;
+        margin-bottom: 10px;
+
+
+        span {
+            display: flex;
+
+            color: rgb(134 144 156) !important;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        color: #fff !important;
+        font-size: 1.3rem;
+
+        label {
+            color: #fff !important;
+            font-size: 1.3rem !important;
+
+            * {
+                color: #fff !important;
+                font-size: 1.3rem !important;
+            }
+        }
+    }
+
+}
+
+.cardqr {
+    justify-content: center;
+    align-items: center;
+
+    &>svg {
+        height: 30vh;
+        width: 100%;
+    }
+}

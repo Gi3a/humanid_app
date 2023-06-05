@@ -1,20 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-import { Typography } from '@mui/material';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
 
 import { useTitle } from '../hooks/use-title';
-import { Page } from '../components/UI/Page';
 
 const ErrorPage = () => {
 
     useTitle('Error');
 
     return (
-        <Page>
-            <Typography component='h1' variant='5'>🔥 Error</Typography>
-            <Link to="/">Back to Home</Link>
-        </Page>
+        <h1><ErrorOutline sx={{ color: 'red' }} />Error 404 | Not Found</h1>
     )
 }
 

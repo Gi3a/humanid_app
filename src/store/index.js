@@ -13,10 +13,12 @@ import storage from 'redux-persist/lib/storage';
 
 import userReducer from './slices/userSlice';
 import loadReducer from './slices/loadSlice';
+import modalReducer from './slices/modalSlice';
 
 const rootReducer = combineReducers({
     user: userReducer,
-    load: loadReducer
+    load: loadReducer,
+    modal: modalReducer
 });
 
 const persistConfig = {

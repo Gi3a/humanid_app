@@ -1,0 +1,76 @@
+.menu {
+
+    .menuclose {
+
+        button {
+            width: 100%;
+            padding: 25px;
+
+            svg {
+                color: #fff !important;
+            }
+        }
+    }
+
+    .MuiPaper-root {
+        background-color: #131727 !important;
+        border-radius: 0.5rem;
+
+        width: 20%;
+        margin: auto;
+        height: 100vh;
+
+        @media (min-width: 801px) and (max-width: 1200px) {
+            & {
+                width: 40%;
+            }
+        }
+
+        @media (min-width: 150px) and (max-width: 800px) {
+            & {
+                width: 100%;
+            }
+        }
+
+        ul {
+            background-image: linear-gradient(to bottom right, #1a1e2d) !important;
+            padding: 25px 0;
+
+            li {
+                color: #fff;
+
+                @media (min-width: 150px) and (max-width: 800px) {
+                    & {
+                        padding: 15px !important;
+                    }
+                }
+
+                span {
+                    font-size: 20px !important;
+                    font-weight: bold;
+
+                    @media (min-width: 150px) and (max-width: 800px) {
+                        & {
+                            font-size: 30px !important;
+                        }
+                    }
+                }
+
+                svg {
+                    color: #fff;
+                    font-size: 30px !important;
+
+                    @media (min-width: 150px) and (max-width: 800px) {
+                        & {
+                            font-size: 40px !important;
+                        }
+                    }
+                }
+
+                &:hover {
+                    background-color: #172b51 !important;
+                }
+            }
+        }
+    }
+}

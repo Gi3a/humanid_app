@@ -1,0 +1,52 @@
+.preview {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 5%;
+    margin-bottom: 5%;
+
+    @media (min-width: 801px) and (max-width: 1200px) {
+        & {
+            width: 100%;
+        }
+    }
+
+    @media (min-width: 150px) and (max-width: 800px) {
+        & {
+            width: 65%;
+        }
+    }
+
+    .previewbox {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        transition: 0.3s all !important;
+
+        margin-top: 10px;
+        margin-bottom: 10px;
+
+
+        @media (min-width: 150px) and (max-width: 800px) {
+            & {
+                flex-direction: column;
+            }
+        }
+
+        &>div {
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s all !important;
+            margin: 15px;
+            color: #fff !important;
+            font-size: 1.3rem;
+
+            span {
+                display: flex;
+                color: rgb(134, 144, 156) !important;
+                font-weight: bold;
+                font-size: 1.4rem;
+            }
+        }
+    }
+}

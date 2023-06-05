@@ -1,0 +1,19 @@
+.list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    overflow: hidden;
+
+    width: 80vw;
+
+    margin-top: 2% !important;
+    margin: auto;
+
+    @media (min-width: 150px) and (max-width: 800px) {
+        & {
+            width: 100vw;
+        }
+    }
+}

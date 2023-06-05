@@ -1,0 +1,17 @@
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    background-color: #080b16;
+    min-height: 100vh;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 70px;
+}

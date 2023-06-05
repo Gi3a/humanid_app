@@ -1,81 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Stepper, Step, StepLabel, StepConnector } from '@mui/material';
 
-import { Typography, Stepper, Step, StepLabel, StepConnector } from '@mui/material';
+import Settings from '@mui/icons-material/Settings';
+
+import Box from '../components/UI/Box';
+
+import { PreviewForm } from '../components/UI/SettingsForms/PreviewForm';
+import { PassportForm } from '../components/UI/SettingsForms/PassportForm';
+import { PersonalForm } from '../components/UI/SettingsForms/PersonalForm';
+import { AdditionalForm } from '../components/UI/SettingsForms/AdditionalForm';
 
 import { useTitle } from '../hooks/use-title';
-import { Page } from '../components/UI/Page';
 
-import { PersonalForm } from '../components/FormsID/PersonalForm';
-import { PassportForm } from '../components/FormsID/PassportForm';
-import { AdditionalForm } from '../components/FormsID/AdditionalForm';
-import { PreviewForm } from '../components/FormsID/PreviewForm';
-
-import { FcInspection, FcUndo } from "react-icons/fc";
-
-const steps = ['Personal Data', 'Passport Data', 'Additional Data', 'Preview Data'];
-
-const NonLinearStepper = (props) => {
-    const { activeStep, handleStep, isFormError } = props;
-
-
-    return (
-        <Stepper activeStep={activeStep} alternativeLabel connector={<StepConnector />}>
-            {steps.map((label, index) => (
-                <Step key={label}>
-                    <StepLabel onClick={handleStep(index)}>{label}</StepLabel>
-                </Step>
-            ))}
-        </Stepper>
-    );
-};
+const steps = ['Personal Data', 'Passport Data', 'Additional Data'];
 
 const SettingsPage = () => {
 
     useTitle('Settings');
 
     const [activeStep, setActiveStep] = useState(0);
-    const [isFormError, setIsFormError] = useState(false);
 
+    const handleStep = (step) => () => setActiveStep(step);
 
+    const StepperRenderer = () => {
+        return (
+            <Stepper activeStep={activeStep} alternativeLabel connector={<StepConnector />}>
+                {steps.map((label, index) => (
+                    <Step key={label}>
+                        <StepLabel
+                            onClick={handleStep(index)}
+                        >
+                            {label}
+                        </StepLabel>
+                    </Step>
+                ))}
+            </Stepper>
+        )
+    }
 
-
-    const handleStep = (step) => () => {
-        setActiveStep(step);
-    };
-
-    const handleNext = () => {
-        if (activeStep === steps.length - 2) {
-            setIsFormError(true);
-            return;
+    const FormRenderer = () => {
+        switch (activeStep) {
+            case 0: return <PersonalForm handleNext={handleStep(1)} />;
+            case 1: return <PassportForm handleNext={handleStep(2)} handleBack={handleStep(0)} />;
+            case 2: return <AdditionalForm handleNext={handleStep(3)} handleBack={handleStep(1)} />;
+            case 3: return <PreviewForm handleNext={handleStep(4)} handleBack={handleStep(2)} />;
+            default: return null;
         }
-
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        setIsFormError(false);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-        setIsFormError(false);
-    };
+    }
 
     return (
-        <Page>
-            <Typography component='h1' variant='5'><FcInspection /> Settings</Typography>
-
-            <NonLinearStepper activeStep={activeStep} handleStep={handleStep} />
-            {activeStep === 0 && <PersonalForm handleNext={handleStep(1)} />}
-            {activeStep === 1 && <PassportForm handleNext={handleStep(2)} handleBack={handleStep(0)} />}
-            {activeStep === 2 && <AdditionalForm handleNext={handleStep(3)} handleBack={handleStep(1)} />}
-            {activeStep === 3 && <PreviewForm handleNext={handleStep(4)} handleBack={handleStep(2)} />}
-            {activeStep === 4 && (
-                <div>
-                    <Typography variant='subtitle1' gutterBottom>Error: Please complete all required fields before submitting</Typography>
-                    <button onClick={handleBack}><FcUndo />Back</button>
+        <>
+            <h1><Settings />Settings</h1>
+            <Box>
+                <div className='settings'>
+                    <StepperRenderer />
+                    <FormRenderer />
                 </div>
-            )}
-            {isFormError && setActiveStep(steps.length - 1)}
-        </Page>
-    )
+            </Box>
+        </>
+    );
 }
 
-export default SettingsPage
+export default SettingsPage;

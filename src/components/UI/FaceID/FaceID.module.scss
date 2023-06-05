@@ -1,0 +1,79 @@
+.faceid {
+
+    * {
+        transition: 0.3s all !important;
+    }
+
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+
+    max-height: 480px;
+    max-width: 640px;
+
+    width: 100%;
+
+    video,
+    canvas {
+        border-radius: 4px;
+
+        width: 100%;
+
+        max-height: 480px;
+        max-width: 640px;
+        z-index: 1;
+
+        transition: 0.3s all !important;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+
+        @media (min-width: 150px) and (max-width: 480px) {
+            & {
+                height: calc(2 * 480px) !important;
+            }
+        }
+    }
+
+    .faceid__interactive {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+
+
+
+        align-items: center;
+
+        width: 100%;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        z-index: 999;
+
+        background-color: rgba(0, 0, 0, 0.3);
+
+
+        font-weight: bold;
+        font-size: 1.5rem;
+
+        b {
+            background-color: #7066e0 !important;
+            padding: 15px !important;
+            border-radius: 4px;
+            position: absolute;
+            top: 10%;
+        }
+
+
+    }
+}

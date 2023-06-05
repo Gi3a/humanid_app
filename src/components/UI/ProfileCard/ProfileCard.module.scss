@@ -1,0 +1,88 @@
+.profilecard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+    width: 100%;
+
+    padding: 30px;
+    margin: 10px;
+    border-radius: 4px;
+
+    background-color: #1a1e2d;
+
+    transition: 0.3s all !important;
+
+    @media (min-width: 801px) and (max-width: 1200px) {
+        & {
+            flex-direction: column;
+            width: 100%;
+        }
+
+    }
+
+    @media (min-width: 150px) and (max-width: 800px) {
+        & {
+            flex-direction: column;
+            width: 65%;
+        }
+
+    }
+
+    .profileinfo {
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s all !important;
+
+        .profilebox {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            transition: 0.3s all !important;
+        }
+
+        button {
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 10px;
+            color: #fff !important;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: capitalize !important;
+            padding: 15px 30px !important;
+            background-color: #7066e0 !important;
+
+            &:hover {
+                background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)) !important;
+            }
+
+            svg {
+                margin-right: 5px;
+                margin-left: 5px;
+            }
+        }
+
+        .profilebox>div {
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s all !important;
+            margin: 10px;
+            color: #fff !important;
+            font-size: 1.3rem;
+
+            span,
+            b {
+                display: flex;
+                color: rgb(134, 144, 156) !important;
+                font-weight: bold;
+                font-size: 1.4rem;
+            }
+
+
+            b {
+                color: #fff !important;
+            }
+        }
+    }
+}

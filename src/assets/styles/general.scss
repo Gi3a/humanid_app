@@ -1,27 +1,94 @@
-// @import "error.scss";
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import "menu.scss", "toggle.scss", "modal.scss", "buttons.scss", "swal.scss", "about.scss", "settings.scss";
 
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Open Sans', sans-serif, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Arial, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji !important;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Arial, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+
+    font-family: DM Sans, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji !important;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
 }
+
+html {
+    color: #fff;
+    -webkit-text-size-adjust: 100%;
+    font-feature-settings: normal;
+
+    line-height: 1.5;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    max-width: 100vw !important;
+    overflow-x: hidden;
+}
+
+h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 2.5rem !important;
+    text-align: center !important;
+    font-weight: bold;
+
+    margin-bottom: 0.75rem;
+
+    &>svg {
+        font-size: 2.5rem !important;
+        margin-left: 5px !important;
+        margin-right: 5px !important;
+    }
+}
+
+
+#root {
+    position: relative;
+}
+
 
 a {
     text-decoration: none;
     cursor: pointer;
+    color: #97a0b8;
+    font-family: DM Sans, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji !important;
 }
 
 button {
-    background-color: transparent;
-    border: none;
     cursor: pointer;
-    font-weight: 700 !important;
+    font-family: DM Sans, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji !important;
 }
 
-h1,
-h2,
-h3 {
-    font-weight: 800;
+input {
+    background-color: #34396a !important;
+    color: #fff !important;
+    font-size: 1.4rem !important;
+
+    border: none !important;
+
+    &:focus,
+    &:hover {
+        outline: none !important;
+        outline-width: 0 !important;
+        box-shadow: none !important;
+    }
+
+}
+
+.MuiFormLabel-root {
+    top: -2px !important
+}
+
+label {
+    // color: rgb(134, 144, 156) !important;
+    color: #fff !important;
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+}
+
+legend {
+    font-size: 1.1rem !important;
+    height: 15px !important;
 }
