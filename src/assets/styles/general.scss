@@ -30,14 +30,14 @@ h1 {
     align-items: center;
     justify-content: center;
 
-    font-size: 2.5rem !important;
+    font-size: 2.2rem !important;
     text-align: center !important;
     font-weight: bold;
 
     margin-bottom: 0.75rem;
 
     &>svg {
-        font-size: 2.5rem !important;
+        font-size: 2.2rem !important;
         margin-left: 5px !important;
         margin-right: 5px !important;
     }
@@ -64,7 +64,9 @@ button {
 input {
     background-color: #34396a !important;
     color: #fff !important;
-    font-size: 1.4rem !important;
+    font-size: 1.2rem !important;
+
+    border-radius: 4px !important;
 
     border: none !important;
 
@@ -75,6 +77,11 @@ input {
         box-shadow: none !important;
     }
 
+}
+
+.MuiOutlinedInput-notchedOutline {
+    border: none !important;
+    width: 100%;
 }
 
 .MuiFormLabel-root {

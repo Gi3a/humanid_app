@@ -19,6 +19,7 @@ import DoDisturb from '@mui/icons-material/DoDisturb';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 
+
 import { Form } from '../Form';
 import { Input } from '../Input';
 
@@ -29,6 +30,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { encryptData, generatePinnedFaceEncodings, decryptData } from '../../../utils/crypto';
 
 import styles from './DialogCard.module.scss';
+import { ButtonGroup } from '@mui/material';
 
 const schema = yup.object().shape({
     receiver: yup
@@ -249,12 +251,13 @@ const ShareCard = ({ receiver_name, receiver_id, data }) => {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseModal}><CloseIcon sx={{ color: 'red' }} /> Close</Button>
-                    <Button type="submit"><DoneIcon sx={{ color: 'green' }} />Save</Button>
-                    {getData &&
-                        <Button onClick={handleBan}><DoDisturb sx={{ color: 'red' }} />Ban</Button>
-                    }
-
+                    <ButtonGroup>
+                        <Button onClick={handleCloseModal}><CloseIcon sx={{ color: 'red' }} /> Close</Button>
+                        <Button type="submit"><DoneIcon sx={{ color: 'lightgreen' }} />Save</Button>
+                        {getData &&
+                            <Button onClick={handleBan}><DoDisturb sx={{ color: 'red' }} />Ban</Button>
+                        }
+                    </ButtonGroup>
                 </DialogActions>
             </Form>
         </>

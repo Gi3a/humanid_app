@@ -12,7 +12,7 @@ import { AdditionalForm } from '../components/UI/SettingsForms/AdditionalForm';
 
 import { useTitle } from '../hooks/use-title';
 
-const steps = ['Personal Data', 'Passport Data', 'Additional Data'];
+const steps = ['Personal', 'Passport', 'Additional'];
 
 const SettingsPage = () => {
 

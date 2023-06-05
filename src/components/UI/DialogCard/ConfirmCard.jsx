@@ -21,6 +21,7 @@ import { unsetUser } from '../../../store/slices/userSlice';
 
 import styles from './DialogCard.module.scss';
 
+import { ButtonGroup } from '@mui/material';
 
 const ConfirmCard = () => {
 
@@ -75,8 +76,10 @@ const ConfirmCard = () => {
                 </div>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseModal}><CloseIcon sx={{ color: 'red' }} /> Cancel</Button>
-                <Button onClick={handleConfirm}><DoneIcon sx={{ color: 'green' }} /> Confirm</Button>
+                <ButtonGroup>
+                    <Button onClick={handleCloseModal}><CloseIcon sx={{ color: 'red' }} /> Cancel</Button>
+                    <Button onClick={handleConfirm}><DoneIcon sx={{ color: 'green' }} /> Confirm</Button>
+                </ButtonGroup>
             </DialogActions>
         </>
     )

@@ -17,6 +17,7 @@ import { Input } from '../Input';
 
 
 import styles from './DialogCard.module.scss';
+import { ButtonGroup } from '@mui/material';
 
 
 const IDCard = () => {
@@ -59,8 +60,10 @@ const IDCard = () => {
                 </div>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseModal}><CloseIcon sx={{ color: 'red' }} /> Close</Button>
-                <Button onClick={copyLink}><ContentCopy sx={{ color: '#29abe2' }} /> Copy</Button>
+                <ButtonGroup>
+                    <Button onClick={handleCloseModal}><CloseIcon sx={{ color: 'red' }} /> Close</Button>
+                    <Button onClick={copyLink}><ContentCopy sx={{ color: '#29abe2' }} /> Copy</Button>
+                </ButtonGroup>
             </DialogActions>
         </>
     )

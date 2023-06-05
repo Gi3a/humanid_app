@@ -16,6 +16,8 @@ import styles from './DialogCard.module.scss';
 
 import { viewDate } from '../../../utils/date';
 
+import { ButtonGroup } from '@mui/material';
+
 const AccessCard = ({ data }) => {
 
     const { closeModal, title } = useModal();
@@ -94,7 +96,9 @@ const AccessCard = ({ data }) => {
                 </div>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseModal}><CloseIcon sx={{ color: 'red' }} /> Close</Button>
+                <ButtonGroup>
+                    <Button onClick={handleCloseModal}><CloseIcon sx={{ color: 'red' }} /> Close</Button>
+                </ButtonGroup>
             </DialogActions>
         </>
     )
