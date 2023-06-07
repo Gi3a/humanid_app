@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Button from '@mui/material/Button';
+import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 
 import { useNavigate } from 'react-router-dom';
@@ -86,6 +86,7 @@ const ProfileCard = () => {
                     </div>
                 </div>
                 <div className={styles.profilebox}>
+
                     <Button onClick={handleShareModal}>
                         <QrCode2 /> Share ID
                     </Button>
@@ -95,6 +96,7 @@ const ProfileCard = () => {
                     <Button onClick={handleOpenModal}>
                         <AutoFixHigh /> Delete Account
                     </Button>
+
                 </div>
             </div >
         </div>

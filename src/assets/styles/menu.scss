@@ -16,19 +16,25 @@
         background-color: #131727 !important;
         border-radius: 0.5rem;
 
+        background: #34396a !important;
+        border-radius: 4px !important;
+        margin: 2% 3% !important;
+
         width: 20%;
         margin: auto;
-        height: 100vh;
+        height: 91vh;
 
         @media (min-width: 801px) and (max-width: 1200px) {
             & {
                 width: 40%;
+                height: 93vh;
             }
         }
 
         @media (min-width: 150px) and (max-width: 800px) {
             & {
-                width: 100%;
+                width: 94%;
+                height: auto;
             }
         }
 
@@ -38,9 +44,6 @@
             padding: 0 !important;
             background-image: linear-gradient(from top to bottom right, #1a1e2d) !important;
 
-            @media (min-width: 150px) and (max-width: 800px) {
-                flex-direction: column-reverse;
-            }
 
             li {
                 color: #fff;

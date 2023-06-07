@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 
 import styles from './FaceID.module.scss';
 
-import { Button, ButtonGroup } from '@mui/material';
+import { Button } from '@mui/material';
 
 import { generatePinnedFaceEncodings, decryptData } from '../../../utils/crypto';
 
@@ -306,10 +306,8 @@ const FaceID = () => {
                 }
                 {!start &&
                     <div className={styles.faceid__interactive}>
-                        <b>Click 'Start' to begin process</b>
-                        <ButtonGroup>
-                            <Button onClick={handleStart}><CenterFocusWeakIcon /> Start</Button>
-                        </ButtonGroup>
+                        <i>Click 'Start' to begin process</i>
+                        <Button onClick={handleStart}><CenterFocusWeakIcon /> Start</Button>
                     </div>
                 }
             </div>
