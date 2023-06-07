@@ -4,7 +4,13 @@
     justify-content: center;
     align-items: center;
 
+    transition: 0.3s all !important;
+
+
     @media (min-width: 150px) and (max-width: 800px) {
+
+        width: 92vw;
+
         &>div {
             display: flex !important;
             flex-direction: column !important;
@@ -13,6 +19,8 @@
             width: 100%;
             border-radius: 4px !important;
             overflow: hidden !important;
+
+            transition: 0.3s all !important;
 
             button {
                 border-radius: 0 !important;
